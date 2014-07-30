@@ -3,6 +3,18 @@
 # The main script.
 # Resets the environment, updates the Mer SDK is necessary and passes on the task to the chroot.
 
+
+
+function dabspath {
+    pushd $1 > /dev/null && echo `pwd` && popd > /dev/null
+}
+
+
+function mdabspath {
+    mkdir -p $1
+    dabspath $1
+}
+
 while (($#)); do
   case $1 in
   -h)
@@ -22,7 +34,7 @@ while (($#)); do
   ;;
   -mer-root)
     shift
-    MER_ROOT=$1
+    MER_ROOT=`mdabspath $1`
     shift
   ;;
   -vendor)
@@ -57,12 +69,12 @@ while (($#)); do
   ;;
   -dest)
     shift
-    IMGDEST=$1
+    IMGDEST=`mdabspath $1`
     shift
   ;;
   -android-root)
     shift
-    ANDROID_ROOT=$1
+    ANDROID_ROOT=`mdabspath $1`
     shift
   ;;
   *)
@@ -71,6 +83,10 @@ while (($#)); do
   ;;
   esac
 done
+
+
+
+
 
 echo 'User specified variables:'
 test -n "$VENDOR"       && echo "  VENDOR=$VENDOR            "

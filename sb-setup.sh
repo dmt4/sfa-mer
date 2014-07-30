@@ -4,7 +4,7 @@
 # To be executed under the Mer SDK
 
 
-[ -z "$MERSDK" ] && $(dirname $0)/exec-mer.sh $0 
+[ -z "$MERSDK" ] && $(dirname $0)/exec-mer.sh $0
 
 
 source ~/.hadk.env
@@ -20,7 +20,7 @@ TARBALL_URL=$(curl $TARGETS_URL | grep 'armv7hl.tar.bz2' | cut -d\" -f4)
 TARBALL=$(basename $TARBALL_URL)
 [ -f $TARBALL ] || curl -O $TARBALL_URL
 [ -f ${TARBALL}.untarred ] || sudo tar --numeric-owner -pxjf $TARBALL -C $SFFE_SB2_TARGET
-[ -f ${TARBALL}.untarred ] || mv ~/.scratchbox2/{,-$(date +%d-%m-%Y.%H-%M-%S)}
+[ -f ${TARBALL}.untarred ] || mv ~/.scratchbox2{,-$(date +%d-%m-%Y.%H-%M-%S)}
 touch ${TARBALL}.untarred
 
 [ $(stat -c %u $SFFE_SB2_TARGET ) == $(id -u) ] || sudo chown -R $USER $SFFE_SB2_TARGET
