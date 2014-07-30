@@ -122,6 +122,8 @@ export JOBS=\${JOBS:-$JOBS}
 " > ~/.hadk.env
 
 
+# echo $0
+
 cp $(dirname $0)/profile-mer ~/.mersdk.profile
 cp $(dirname $0)/profile-ubu ~/.mersdkubu.profile
 
