@@ -9,13 +9,14 @@ while (($#)); do
     printf "Correct usage: `basename $0` [-option value]
     Valid options are:
       -mer-root folder   # the place where you want MER_ROOT to point
+      -android-root folder # where to download 18GiB and compile a little of it
       -vendor vendorName # the vendor name
       -device deviceName # the device name
       -branch branchName # the branch name from mer hybris
       -jobs number       # the number of parallel jobs to be used for parallel builds
       -extraname name    # string to be added in the name of the image (beware, dots are not allowed)
       -sfrelease x.y.z.p # the release version of Sailfish OS against which the image is built
-      -dest destination  # where to place to the image
+      -dest folder       # where to place to the image
       -h displays this help\n"
     exit 0
   ;;
@@ -57,6 +58,11 @@ while (($#)); do
   -dest)
     shift
     IMGDEST=$1
+    shift
+  ;;
+  -android-root)
+    shift
+    ANDROID_ROOT=$1
     shift
   ;;
   *)
