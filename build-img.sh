@@ -41,7 +41,7 @@ rpm/helpers/process_patterns.sh
 #RELEASE=1.0.8.19
 #RELEASE=latest
 # WARNING: EXTRA_NAME currently does not support '.' dots in it!
-#EXTRA_NAME=-dmt-$(date +%Y%m%d%H%M)
+EXTRA_NAME=-${EXTRA_STRING}-$(date +%Y%m%d%H%M)
 sudo mic create fs --arch armv7hl \
   --tokenmap=ARCH:armv7hl,RELEASE:$RELEASE,EXTRA_NAME:$EXTRA_NAME \
   --record-pkgs=name,url \
