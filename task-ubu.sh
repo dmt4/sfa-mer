@@ -28,7 +28,7 @@ fi
 
 cd $ANDROID_ROOT
 
-echo 'repo sync -c &> repo-sync.stdoe'
+echo "repo sync -c &> repo-sync.stdoe"
 repo sync -c &> repo-sync.stdoe
 
 source build/envsetup.sh
@@ -36,7 +36,7 @@ export USE_CCACHE=1
 breakfast $DEVICE
 rm -f .repo/local_manifests/roomservice.xml
 
-echo 'make -j$JOBS hybris-hal &> make-hybris-hal.stdoe'
+echo "make -j$JOBS hybris-hal &> make-hybris-hal.stdoe"
 make -j$JOBS hybris-hal &> make-hybris-hal.stdoe
 
 
