@@ -71,13 +71,6 @@ while (($#)); do
   ;;
   esac
 done
-# test -n "$merroot" && echo "User specified \$MER_ROOT=$merroot"
-# test -n "$vendor" && echo "User specified \$VENDOR=$vendor"
-# test -n "$device" && echo "User specified \$DEVICE=$device"
-# test -n "$branch" && echo "User specified \$BRANCH=$branch for mer-hybris"
-# test -n "$jobs" && echo "User specified \$JOBS=$jobs number of jobs to be used to build"
-# test -n "$extraname" && echo "User specified bit for \$EXTRA_NAME is $extraname"
-# test -n "$sfrelease" && echo "User specified \$RELEASE=$sfrelease"
 
 echo 'User specified variables:'
 test -n "$VENDOR"       && echo "  VENDOR=$VENDOR            "
