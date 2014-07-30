@@ -23,7 +23,7 @@ export PATH=${PATH}:${HOME}/bin
 if [ ! -d $ANDROID_ROOT ]; then
     mkdir -p $ANDROID_ROOT
     cd $ANDROID_ROOT
-    repo init -u git://github.com/mer-hybris/android.git -b hybris-11.0
+    repo init -u git://github.com/mer-hybris/android.git -b $BRANCH
 fi
 
 cd $ANDROID_ROOT
@@ -36,8 +36,8 @@ export USE_CCACHE=1
 breakfast $DEVICE
 rm -f .repo/local_manifests/roomservice.xml
 
-echo 'make -j8 hybris-hal &> make-hybris-hal.stdoe'
-make -j8 hybris-hal &> make-hybris-hal.stdoe
+echo 'make -j$JOBS hybris-hal &> make-hybris-hal.stdoe'
+make -j$JOBS hybris-hal &> make-hybris-hal.stdoe
 
 
 
