@@ -1,0 +1,2 @@
+PS1="\[\e[0;32m\]\t mer:\W\[\e[0m\] "
+source ~/.hadk.env

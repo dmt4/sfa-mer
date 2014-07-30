@@ -1,0 +1,2 @@
+export PS1="HABUILD_SDK [\${DEVICE}] $PS1"
+source ~/.hadk.env

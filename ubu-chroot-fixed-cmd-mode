@@ -1,0 +1,285 @@
+#!/bin/bash
+# mer-android-chroot
+
+usage()
+{
+    cat <<EOF
+    usage: $0 [-u <user>] [-m <all|none|root|home>] [-r <SDK root path>] [<command> <args> ..]
+           $0 -h
+
+       This is the Mer android building chroot SDK.
+       For information see http://wiki.merproject.org/wiki/Android_SDK
+
+      If command is not present,
+         used to enter the SDK and begin working. The SDK bash shell
+         is a login shell. See below for .profile handling.  May be
+         used in multiple terminals and simply enters the chroot
+
+      If command is present,
+         used to execute an arbitrary command from within the SDK
+         chroot environment. The environment variable MERSDKUBU is set
+         to 1 to allow SDK detection.
+
+      Options:
+
+       -u  System user to link into SDK (not needed if using sudo)
+       -m  Devices to bind mount from host: none, all (default)
+           root, home
+       -r The root of the SDK to use - normally derived from the
+          pathname of $0
+       -h  Show this help
+
+      Profile
+
+      Entering the SDK runs the user's normal .profile and any (SDK)
+      system profile entries. It will not execute the host's system
+      profile entries.
+
+      The environment variable MERSDKUBU is set to 1 to allow .profile
+      to detect the SDK.
+
+      ## If the user has a ~/.mersdkubu.profile then it is sourced after the
+      normal .profile handling (this allows the common use case of
+      setting a profile to be handled).
+
+      Hooks
+
+      If the user specified has a .mersdkuburc in their $HOME, it will
+      be sourced to allow hook functions to be defined. Hooks are run
+      as root. No commands should be executed immediately.
+
+      These hooks are usually used to define symbolic links from any
+      /parentroot/data type filesystems into the SDK root to setup
+      system specific shared caches or filesystem layouts etc
+
+EOF
+    return 0
+}
+
+if [[ $EUID -ne 0 ]]; then
+    exec sudo $0 "$@"
+    echo "$0 must be run as root and sudo failed; exiting"
+    exit 1
+fi
+
+if cmp -s /proc/$PPID/mountinfo /proc/self/mountinfo; then
+    exec unshare -m -- "$0" "$@"
+    echo "$0 must be run in private namespace and unshare failed; exiting"
+    exit 1
+fi
+
+# Use the SUDO value if present
+user=$SUDO_USER || true;
+
+bind_mount_root="yes";
+bind_mount_home="yes";
+
+while getopts "u:m:r:" opt; do
+    case $opt in
+	u ) user=$OPTARG;;
+	m )
+	    case $OPTARG in
+		all) ;;
+		home)
+		    bind_mount_root="no";;
+		root)
+		    bind_mount_home="no";;
+		none)
+		    bind_mount_root="no";
+		    bind_mount_home="no";;
+		*)  echo "Only 'none', 'all' or 'home' are permitted for -m"
+		    usage
+		    exit 1;;
+	    esac ;;
+	r ) uburoot=$OPTARG;;
+	h|\? ) usage
+            exit 1;;
+	: ) echo "Option -$OPTARG requires an argument." >&2
+	    usage
+	    exit 1;;
+	* ) usage
+            exit 1;;
+    esac
+done
+shift $(($OPTIND - 1))
+
+if [[ -z "${uburoot}" ]] ; then
+    echo "You must specify the Ubuntu rootfs using the -r option"
+    exit 1
+else
+    uburoot=$(readlink -f $uburoot)
+fi
+echo set root to $uburoot
+
+if [[ ! -f ${uburoot}/etc/debian_version ]] ; then
+    echo "${uburoot} does not look like an Ubuntu rootfs"
+    echo "if you are sure it is, you may mark it by running"
+    echo "echo 'MerSDK' | sudo tee ${uburoot}/etc/debian_version"
+    exit 1
+fi
+
+sdkparent="$(df -P "$uburoot/" | tail -1 | awk '{print $NF}')"
+if [ -z  "$sdkparent" ] ; then
+    echo "Unable to determine mount point of filesystem containing \"$uburoot\""
+    exit 1
+fi
+
+if [[ -z $user ]] ; then
+    echo "$0 expects to be run as root using sudo"
+    echo "User could not be obtained from \$SUDO_USER, if running as root,"
+    echo "please use -u <user>"
+    echo
+    usage
+    exit 1
+fi
+
+# From now on, exit if variables not set
+set -u
+
+# Make sure normal users can use any dirs we make
+umask 022
+
+################################################################
+# Mount
+mount_bind() {
+    if [[ ! -d ${uburoot}$1 ]]; then
+	rm -f ${uburoot}$1
+	mkdir -p ${uburoot}$1
+    fi
+    mount --bind $1 ${uburoot}$1
+}
+prepare_mountpoints() {
+    # Make parent mountpoint not shared with parent namespace
+    mount --make-slave "$sdkparent/"
+
+    echo "Mounting system directories..."
+    mount_bind /proc
+    mount_bind /proc/sys/fs/binfmt_misc
+    mount_bind /sys
+    mount_bind /dev
+    mount_bind /dev/pts
+    mount_bind /dev/shm
+    mount_bind /var/lib/dbus
+    mount_bind /var/run/dbus
+
+    if [[ $bind_mount_root == "yes" ]] ; then
+	echo "Mounting / as /parentroot"
+	mkdir -p ${uburoot}/parentroot
+	mount --rbind / ${uburoot}/parentroot/
+    fi
+
+    mkdir -p ${uburoot}/lib/modules/`uname -r`
+    mount_bind /lib/modules/`uname -r`
+
+}
+
+prepare_user() {
+    # remove mer user if present
+    sed -i -e "/^mer:/d" ${uburoot}/etc/passwd
+    # getent is probably best for user data
+    sed -i -e "/^${user}:/d" ${uburoot}/etc/passwd
+    getent passwd $user >> ${uburoot}/etc/passwd
+    group=$(getent passwd $user | cut -f4 -d:)
+    sed -i -e "/^[^:]*:[^:]*:${group}:/d" ${uburoot}/etc/group
+    getent group $group >> ${uburoot}/etc/group
+    HOMEDIR=$(getent passwd $user | cut -f6 -d:)
+
+    if [[ $bind_mount_home == "yes" ]] ; then
+	echo "Mounting home directory: ${HOMEDIR}"
+	mkdir -p ${uburoot}${HOMEDIR}
+	# For some reason, inside an SDK, we can't remount a bound $HOME
+	local proot=""
+	{ [[ -h /parentroot ]] || ! [[ -e /parentroot ]]; } || proot=/parentroot
+	echo "mount --bind ${proot}${HOMEDIR} ${uburoot}${HOMEDIR}"
+	mount --bind ${proot}${HOMEDIR} ${uburoot}${HOMEDIR}
+    fi
+    echo "$user ALL=NOPASSWD: ALL" > ${uburoot}/etc/sudoers.d/$user
+    chmod 0440 ${uburoot}/etc/sudoers.d/$user
+}
+
+prepare_etc() {
+    # Symlink to parentroot to support dynamic resolv.conf on host
+    rm -f ${uburoot}/etc/resolv.conf
+    resolv=$(readlink -fn /etc/resolv.conf) # some systems use symlinks to /var/run/...
+    ln -s /parentroot/$resolv ${uburoot}/etc/resolv.conf
+
+    # Fixup old SDKs with broken /etc/mtab since this won't be fixed
+    # by any package updates
+    if [[ ! -L ${uburoot}/etc/mtab ]]; then
+	echo "The /etc/mtab file in the SDK is not a symbolic link - forcing it to link to /proc/self/mounts to fix https://bugs.merproject.org/show_bug.cgi?id=385"
+	rm -f ${uburoot}/etc/mtab
+	ln -s /proc/self/mounts ${uburoot}/etc/mtab
+    fi
+
+}
+
+################
+
+setup_user_hooks(){
+    # Access any user hooks
+    [[ -e $HOMEDIR/.mersdkuburc ]] && . $HOMEDIR/.mersdkuburc
+}
+
+run_user_hook() {
+    hook=$1
+    [[ $(type -t $hook) == "function" ]] && {
+	echo "User hook $hook"
+	$hook
+    }
+}
+
+################################################################
+
+do_it_all() {
+    retval=0
+    cwd=$(pwd)
+
+    prepare_mountpoints   # host / and data and /proc and similar
+    prepare_user          # in /etc/passwd
+    setup_user_hooks      # (after prepare so HOMEDIR is known)
+    prepare_etc           # resolv.conf and ssl certs
+    run_user_hook mount_sdk
+    run_user_hook enter_sdk
+
+    case "$#" in
+	0 )
+	    echo "Entering chroot as $user"
+	    if grep squeeze ${uburoot}/etc/debian_version > /dev/null; then
+		# For older 10.04
+		setarch x86_64 chroot ${uburoot} /usr/bin/sudo -i -u $user "if [ -d \"$cwd\" ]; then cd \"$cwd\"; fi; exec bash --init-file /parentroot/usr/share/ubu-chroot/mer-ubusdk-bash-setup -i";
+	    elif grep wheezy ${uburoot}/etc/debian_version > /dev/null; then
+		# This is for ubuntu 12.04 (arg quoting for sudo is different)
+		setarch x86_64 chroot ${uburoot} /usr/bin/sudo -i -u $user exec bash -i -c "if [ -d \"$cwd\" ]; then cd \"$cwd\"; fi; exec bash --init-file /parentroot/usr/share/ubu-chroot/mer-ubusdk-bash-setup"
+	    else
+		echo Unknown ubuntu version
+		exit 1
+	    fi
+	    ;;
+	* )
+	    if [[ $1 == 'exec' ]]; then
+		cat <<EOF
+WARN: sdk 'exec' is deprecated. Just execute SDK commands using:
+  $0 <cmd> <args>
+  
+Executing commands as requested
+EOF
+		shift # Remove the offending 'exec'
+	    fi
+	    if [[ ! $1 ]]; then
+		echo "You must supply a command to exec"
+		usage
+		retval=1
+	    else
+#		setarch x86_64 chroot "${uburoot}" /bin/su -s /bin/bash -l $user -- -c "export MERSDKUBU=1;if [ -d $cwd ]; then cd $cwd; fi; $*"
+		setarch x86_64 chroot "${uburoot}" /usr/bin/sudo -u $user MERSDKUBU=1 -i $*
+		retval=$?
+	    fi
+	    ;;
+    esac
+    echo exited
+    run_user_hook leave_sdk
+    exit $retval
+}
+
+# This allows us to update this script in place even whilst running.
+do_it_all $*
