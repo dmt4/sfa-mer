@@ -29,7 +29,7 @@ MOBS_URI="http://repo.merproject.org/obs"
 #sed -i "/%post$/a echo 'KERNEL==\"hw_random\", NAME=\"hwrng\", SYMLINK+=\"%k\"' >> \/lib\/udev\/rules.d\/999-extra-rules.rulesi; udevadm trigger" $KSFL
 #sed -i "/%post$/a rm -f \/lib\/systemd\/system\/sysinit.target.wants\/sys-kernel-debug.mount" $KSFL
 #sed -i "/%post$/a rm -f \/usr\/lib\/qt5\/plugins\/sensors\/libqtsensors_sensorfw.so" $KSFL
-sed -i '/%post$/a sed -i \"s;WantedBy;RequiredBy;g\" \/lib\/systemd\/system\/system.mount' $KSFL
+#sed -i '/%post$/a sed -i \"s;WantedBy;RequiredBy;g\" \/lib\/systemd\/system\/system.mount' $KSFL
 sed -i '/%post$/a echo \"RequiredBy=droid-hal-init.service\" >> \/lib\/systemd\/system\/local-fs.target' $KSFL
 sed -i '/%post$/a echo \"[Install]\" >> \/lib\/systemd\/system\/local-fs.target' $KSFL
 
