@@ -33,7 +33,7 @@ sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu lr
 
 # addition from me (dmt)
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper ref -f
-sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n install droid-hal-hammerhead
+sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n install droid-hal-$DEVICE
 
 mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build
 
