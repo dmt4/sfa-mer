@@ -1,7 +1,7 @@
 Sailfish/Mer image build scripts
 --------------------------------
 
-The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 pocket computer in a clean, easy and reprodicible way. They have been largely written by following [the guide](http://releases.sailfishos.org/sfa-ea/2014-07-21_SailfishOSHardwareAdaptationDevelopmentKit.pdf), [the wiki](https://wiki.merproject.org/wiki/Building_Sailfish_OS_for_Nexus_5) and advice from alin, sledges, vgrad and others in #sailfishos-porters at irc.freenode.org.
+The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 pocket computer in a clean, easy and reprodicible way. They have been largely written by following [the guide](http://releases.sailfishos.org/sfa-ea/2014-07-21_SailfishOSHardwareAdaptationDevelopmentKit.pdf), [the wiki](https://wiki.merproject.org/wiki/Building_Sailfish_OS_for_Nexus_5) and advice from alin, sledges, vgrade and others in #sailfishos-porters at irc.freenode.org.
 
 ## Instructions
 
