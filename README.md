@@ -1,7 +1,7 @@
 Sailfish/Mer image build scripts
 --------------------------------
 
-The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 pocket computer in a clean, easy and reprodicible way. They have been largely written by following [the guide](http://releases.sailfishos.org/sfa-ea/2014-07-21_SailfishOSHardwareAdaptationDevelopmentKit.pdf), [the wiki](https://wiki.merproject.org/wiki/Building_Sailfish_OS_for_Nexus_5) and advice from alin, sledges, vgrad and others from #sailfishos-porters at irc.freenode.org.
+The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 pocket computer in a clean, easy and reprodicible way. They have been largely written by following [the guide](http://releases.sailfishos.org/sfa-ea/2014-07-21_SailfishOSHardwareAdaptationDevelopmentKit.pdf), [the wiki](https://wiki.merproject.org/wiki/Building_Sailfish_OS_for_Nexus_5) and advice from alin, sledges, vgrad and others in #sailfishos-porters at irc.freenode.org.
 
 ## Instructions
 
@@ -14,6 +14,8 @@ The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 po
   - Make sure the .sh files are executable and start the 'fullbuild.sh' script. After a shortwhile it will ask for the root password to enter the Mer chroot.
 
   - If all goes suffessfull, after an hour or so, a freshly baked image shall appear in the current working directory.
+
+  - The scrips below fullbuild.sh, responsible for the different activities, can be executed in standalone mode after initial fullbuild.sh, to repeat on certain parts of the build. Of these ahal.sh and build-img.sh and the combined hal-mw-and-img.sh are probably most useful. Each script contains a short description in its heading.
 
 
 ## Notes
