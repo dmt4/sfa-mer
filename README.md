@@ -5,17 +5,15 @@ The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 po
 
 ## Instructions
 
-  - Read the scripts starting from fullbuild.sh and try to understand what goes on and why!
+  - Read the scripts starting from fullbuild.sh and try to understand what goes on and why! Description of the accepted options is printed by `fullbuild.sh -h`.
 
   - Backup ~/.hadk.env, ~/.mersdk.profile and ~/.mersdkubu.profile if you with to keep them. They will be overwriten!
-
-  - Set MER_ROOT in hadk.env to an empty (nonexistant is acceptable too) location which gets bind-mounted in the subsequent SDK chroots. This condition usually restricts choice to a directory under ${HOME}. The scripts should also reside in such accessible directory. Making it work with any other location is a piece of homework for the curious reader.
 
   - Make sure the .sh files are executable and start the 'fullbuild.sh' script. After a shortwhile it will ask for the root password to enter the Mer chroot.
 
   - If all goes suffessfull, after an hour or so, a freshly baked image shall appear in the current working directory.
 
-  - The scrips below fullbuild.sh, responsible for the different activities, can be executed in standalone mode after initial fullbuild.sh, to repeat on certain parts of the build. Of these ahal.sh and build-img.sh and the combined hal-mw-and-img.sh are probably most useful. Each script contains a short description in its heading.
+  - The scrips below fullbuild.sh, responsible for the different activities, can be executed in standalone mode after initial fullbuild.sh, to repeat certain parts of the build. Of these, ahal.sh, build-img.sh and the combined hal-mw-and-img.sh are probably most useful. Each script contains a short description in its heading.
 
 
 ## Notes
@@ -32,6 +30,12 @@ The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 po
   **CLOSE THE UNHINDERED ROOT ACCESS AT PORT 2323 BEFORE CONNECTING TO THE NET**
 
 
+## USAGE EXAMPLE
+```bash
+./fullbuild.sh -mer-root nexus5 -android-root nexus5/droid -device hammerhead -vendor lge -extraname dmt -sfrelease 1.0.8.19 -jobs 8 -branch hybris-11.0 -dest nexus5
+```
+
+
 
 Copyright (C) 2014 Dimitar Pashov <d.pashov@gmail.com>
 
@@ -41,6 +45,3 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
-## USAGE EXAMPLE
-./fullbuild.sh -mer-root nexus5 -device hammerhead -vendor lge -extrastring dmt -sfrelease 1.0.8.19 -jobs 8 -branch hybris-11.0

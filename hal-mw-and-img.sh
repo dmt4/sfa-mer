@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# A convenience wrapper which only rebuilds the hal, the middleware and image.
+# A convenience wrapper which only rebuilds the hal, the middleware and the image.
 
 [ -z "$MERSDK" ] && $(dirname $0)/exec-mer.sh $0
 [ -z "$MERSDK" ] && exit 0
