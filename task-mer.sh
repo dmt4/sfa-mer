@@ -8,6 +8,7 @@
 # - Build the image!
 
 [ -z "$MERSDK" ] && $(dirname $0)/exec-mer.sh $0
+[ -z "$MERSDK" ] && exit 0
 
 sudo zypper -n install android-tools createrepo zip
 

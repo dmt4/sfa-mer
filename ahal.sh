@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Build droid-hal and other middleware 
+# Build droid-hal and other middleware
 # To be executed under the Mer SDK
 
 
-[ -z "$MERSDK" ] && $(dirname $0)/exec-mer.sh $0 
+[ -z "$MERSDK" ] && $(dirname $0)/exec-mer.sh $0
+[ -z "$MERSDK" ] && exit 0
 
 source ~/.hadk.env
 

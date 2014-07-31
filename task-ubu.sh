@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Download/resync the CyanogenMod sources and compile libhybris. 
+# Download/resync the CyanogenMod sources and compile libhybris.
 # This requires humongous amount of space (18+ GiB) for nebulous, to me, reasons.
-# On subsequent runs the source is updated and only dependencies are rebuild which 
+# On subsequent runs the source is updated and only dependencies are rebuild which
 # does save significant amount of time.
 
 # To be run under the Ubuntu SDK
@@ -10,6 +10,7 @@
 source ~/.hadk.env
 
 [ -z "$MERSDKUBU" ] && $(dirname $0)/exec-mer.sh ubu-chroot -r ${MER_ROOT}/sdks/ubuntu $0
+[ -z "$MERSDKUBU" ] && exit 0
 
 
 
