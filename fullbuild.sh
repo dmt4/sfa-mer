@@ -13,6 +13,7 @@ function dabspath {
 function mdabspath {
     mkdir -p $1
     dabspath $1
+    rmdir --ignore-fail-on-non-empty $1
 }
 
 while (($#)); do
