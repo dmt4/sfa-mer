@@ -13,7 +13,7 @@ source ~/.hadk.env
 [ -z "$MERSDKUBU" ] && exit 0
 
 
-
+mkdir -p ~/bin
 [ -f ~/bin/repo ] || curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
 chmod a+x ~/bin/repo
 
