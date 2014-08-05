@@ -24,10 +24,13 @@ The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 po
 
   - Repeated execution of the script is intended to only update the sources and rebuild the differences, the middleware and the image.
 
-  - before running script ensure git is installed on host and setup
-
+  - Before running the script ensure git is installed on the host, and your details are setup
+    ```bash
     git config --global user.email "you@example.com"
     git config --global user.name "Your Name"
+    ```
+
+  - If building hybris-hal in parallel mode fails, try "-jobs 1" (see example below).
 
 
 ## **WARNING**
@@ -35,15 +38,13 @@ The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 po
   **CLOSE THE UNHINDERED ROOT ACCESS AT PORT 2323 BEFORE CONNECTING TO THE NET**
 
 
-## USAGE EXAMPLE
+## Usage example
 ```bash
 ./fullbuild.sh -mer-root nexus5 -android-root nexus5/droid -device hammerhead -vendor lge -extraname dmt -sfrelease 1.0.8.19 -jobs 8 -branch hybris-11.0 -dest nexus5
 ```
 
 
-
-Copyright (C) 2014 Dimitar Pashov <d.pashov@gmail.com>
-
+## License
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
