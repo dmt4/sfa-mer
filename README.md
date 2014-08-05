@@ -24,6 +24,11 @@ The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 po
 
   - Repeated execution of the script is intended to only update the sources and rebuild the differences, the middleware and the image.
 
+  - before running script ensure git is installed on host and setup
+
+    git config --global user.email "you@example.com"
+    git config --global user.name "Your Name"
+
 
 ## **WARNING**
 
