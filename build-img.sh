@@ -14,9 +14,13 @@ cd $ANDROID_ROOT
 mkdir -p tmp
 KSFL=$ANDROID_ROOT/tmp/Jolla-@RELEASE@-$DEVICE-@ARCH@.ks
 
+
+
 HA_REPO="repo --name=adaptation0-$DEVICE-@RELEASE@"
-sed -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" \
+sed -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=${MW_REPO}|" \
   $ANDROID_ROOT/installroot/usr/share/kickstarts/$(basename $KSFL) > $KSFL
+
+
 
 
 MOBS_URI="http://repo.merproject.org/obs"
