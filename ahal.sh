@@ -144,14 +144,10 @@ SPEC=$PKG
 cd $MER_ROOT/devel/mer-hybris
 if [ -d $PKG ] ; then
   cd $PKG
-#  git pull
+  git pull
 else
   git clone https://github.com/mer-hybris/$PKG.git
   cd $PKG
-# this i confess is a shoddy execution
-  curl https://raw.githubusercontent.com/siteshwar/pulseaudio-modules-droid/testing/src/droid/droid-util.c > src/droid/droid-util.c
-  curl https://raw.githubusercontent.com/siteshwar/pulseaudio-modules-droid/testing/src/droid/droid-util.h > src/droid/droid-util.h
-  curl https://raw.githubusercontent.com/siteshwar/pulseaudio-modules-droid/testing/src/droid/droid-util-44.h > src/droid/droid-util-44.h
 fi
 mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build
 mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/
@@ -160,4 +156,20 @@ mv RPMS/*.rpm $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG
 createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install zypper ref
 
+PKG=dsme
+SPEC=$PKG
+cd $MER_ROOT/devel/mer-hybris
+if [ -d $PKG ] ; then
+  cd $PKG
+  git pull
+else
+  git clone https://github.com/nemomobile/$PKG.git
+  cd $PKG
+fi
+mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build
+mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/
+rm -f $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/*.rpm
+mv RPMS/*.rpm $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG
+createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
+sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install zypper ref
 
