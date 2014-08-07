@@ -11,22 +11,30 @@
 source ~/.hadk.env
 
 cd $ANDROID_ROOT
+
+
+mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE
+createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
+
+
 mkdir -p tmp
 KSFL=$ANDROID_ROOT/tmp/Jolla-@RELEASE@-$DEVICE-@ARCH@.ks
 
 
 
 HA_REPO="repo --name=adaptation0-$DEVICE-@RELEASE@"
-sed -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=${MW_REPO}|" \
+sed -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" \
   $ANDROID_ROOT/installroot/usr/share/kickstarts/$(basename $KSFL) > $KSFL
 
+if [ -n "$MW_REPO" ]; then
+    HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=${MW_REPO}"
+    sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
+fi
 
 
 
-MOBS_URI="http://repo.merproject.org/obs"
+# MOBS_URI="http://repo.merproject.org/obs"
 
-#HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=$MOBS_URI/sailfishos:/devel:/hw:/$DEVICE/sailfish_latest_@ARCH@/"
-#sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
 
 #HA_REPO2="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=$MOBS_URI/home:/alin:/extra/sailfish_latest_@ARCH@/"
 #sed -i -e "/^$HA_REPO.*$/a$HA_REPO2" $KSFL

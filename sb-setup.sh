@@ -39,7 +39,7 @@ sb2 -t $VENDOR-$DEVICE-armv7hl -m sdk-install -R zypper ar \
     -G http://repo.merproject.org/releases/mer-tools/rolling/builds/armv7hl/packages/ mer-tools-rolling
 sb2 -t $VENDOR-$DEVICE-armv7hl -m sdk-install -R zypper ref --force
 
-mkdir $MER_ROOT/tmp
+mkdir -p $MER_ROOT/tmp
 cd $MER_ROOT/tmp
 
 cat > main.c << EOF
