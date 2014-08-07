@@ -148,10 +148,6 @@ if [ -d $PKG ] ; then
 else
   git clone https://github.com/mer-hybris/$PKG.git
   cd $PKG
-# this i confess is a shoddy execution
-  curl https://raw.githubusercontent.com/siteshwar/pulseaudio-modules-droid/testing/src/droid/droid-util.c > src/droid/droid-util.c
-  curl https://raw.githubusercontent.com/siteshwar/pulseaudio-modules-droid/testing/src/droid/droid-util.h > src/droid/droid-util.h
-  curl https://raw.githubusercontent.com/siteshwar/pulseaudio-modules-droid/testing/src/droid/droid-util-44.h > src/droid/droid-util-44.h
 fi
 mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build
 mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/
