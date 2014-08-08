@@ -29,6 +29,7 @@ while (($#)); do
       -jobs number       # the number of parallel jobs to be used for parallel builds
       -extraname name    # string to be added in the name of the image (beware, dots are not allowed)
       -sfrelease x.y.z.p # the release version of Sailfish OS against which the image is built
+      -no-education      # do not show the lenghtly user tutorial on first boot
       -dest folder       # where to place to the image
       -h displays this help\n"
     exit 0
@@ -78,6 +79,11 @@ while (($#)); do
     ANDROID_ROOT=`mdabspath $1`
     shift
   ;;
+  -no-education)
+    shift
+    DISABLE_TUTORIAL=1
+    shift
+  ;;
   *)
     echo "unknown option! Use -h for the list of options!"
     exit 0
@@ -90,16 +96,16 @@ done
 
 
 echo 'User specified variables:'
-test -n "$VENDOR"       && echo "  VENDOR=$VENDOR            "
-test -n "$DEVICE"       && echo "  DEVICE=$DEVICE            "
-test -n "$MER_ROOT"     && echo "  MER_ROOT=$MER_ROOT        "
-test -n "$ANDROID_ROOT" && echo "  ANDROID_ROOT=$ANDROID_ROOT"
-test -n "$IMGDEST"      && echo "  IMGDEST=$IMGDEST          "
-test -n "$RELEASE"      && echo "  RELEASE=$RELEASE          "
-test -n "$EXTRA_STRING" && echo "  EXTRA_STRING=$EXTRA_STRING"
-test -n "$BRANCH"       && echo "  BRANCH=$BRANCH            "
-test -n "$JOBS"         && echo "  JOBS=$JOBS                "
-
+test -n "$VENDOR"           && echo "  VENDOR=$VENDOR            "
+test -n "$DEVICE"           && echo "  DEVICE=$DEVICE            "
+test -n "$MER_ROOT"         && echo "  MER_ROOT=$MER_ROOT        "
+test -n "$ANDROID_ROOT"     && echo "  ANDROID_ROOT=$ANDROID_ROOT"
+test -n "$IMGDEST"          && echo "  IMGDEST=$IMGDEST          "
+test -n "$RELEASE"          && echo "  RELEASE=$RELEASE          "
+test -n "$EXTRA_STRING"     && echo "  EXTRA_STRING=$EXTRA_STRING"
+test -n "$BRANCH"           && echo "  BRANCH=$BRANCH            "
+test -n "$JOBS"             && echo "  JOBS=$JOBS                "
+test -n "$DISABLE_TUTORIAL" && echo "  DISABLE_TUTORIAL=$DISABLE_TUTORIAL "
 
 
 [ -f ~/.hadk.env ] && source ~/.hadk.env
@@ -121,6 +127,8 @@ export EXTRA_STRING=\${EXTRA_STRING:-$EXTRA_STRING}
 export BRANCH=\${BRANCH:-$BRANCH}
 export JOBS=\${JOBS:-$JOBS}
 
+export DISABLE_TUTORIAL=\${DISABLE_TUTORIAL:-$DISABLE_TUTORIAL}
+
 
 # printf \"vars in use:
 #     VENDOR=\$VENDOR
@@ -135,6 +143,7 @@ export JOBS=\${JOBS:-$JOBS}
 #
 #     BRANCH=\$BRANCH
 #     JOBS=\$JOBS
+#     DISABLE_TUTORIAL=\$DISABLE_TUTORIAL
 # \"
 " > ~/.hadk.env
 

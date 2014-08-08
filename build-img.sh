@@ -34,6 +34,17 @@ MOBS_URI="http://repo.merproject.org/obs"
 sed -i '/%post$/a echo \"RequiredBy=droid-hal-init.service\" >> \/lib\/systemd\/system\/local-fs.target' $KSFL
 sed -i '/%post$/a echo \"[Install]\" >> \/lib\/systemd\/system\/local-fs.target' $KSFL
 
+if [ -n "$DISABLE_TUTORIAL" ]; then
+#Beware the order of these commands is reversed in $KSFL
+    sed -i '/%post$/a chown nemo:privileged /home/nemo/.jolla-startupwizard-usersession-done' $KSFL
+    sed -i '/%post$/a chown nemo:nemo /home/nemo/.jolla-startupwizard-done'          $KSFL
+    sed -i '/%post$/a touch /home/nemo/.jolla-startupwizard-done false'              $KSFL
+    sed -i '/%post$/a touch /home/nemo/.jolla-startupwizard-usersession-done false'  $KSFL
+
+    sed -i '/%post$/a dconf write "/apps/jolla-startupwizard/reached_tutorial" true' $KSFL
+    sed -i '/%post$/a dconf write "/desktop/lipstick-jolla-home/first_run" false'    $KSFL
+fi
+
 
 rpm/helpers/process_patterns.sh
 
