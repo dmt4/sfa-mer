@@ -37,18 +37,38 @@ fi
 #sed -i "/%post$/a rm -f \/lib\/systemd\/system\/sysinit.target.wants\/sys-kernel-debug.mount" $KSFL
 #sed -i "/%post$/a rm -f \/usr\/lib\/qt5\/plugins\/sensors\/libqtsensors_sensorfw.so" $KSFL
 #sed -i '/%post$/a sed -i \"s;WantedBy;RequiredBy;g\" \/lib\/systemd\/system\/system.mount' $KSFL
-sed -i '/%post$/a echo \"RequiredBy=droid-hal-init.service\" >> \/lib\/systemd\/system\/local-fs.target' $KSFL
-sed -i '/%post$/a echo \"[Install]\" >> \/lib\/systemd\/system\/local-fs.target' $KSFL
+#sed -i '/%post$/a echo \"RequiredBy=droid-hal-init.service\" >> \/lib\/systemd\/system\/local-fs.target' $KSFL
+#sed -i '/%post$/a echo \"[Install]\" >> \/lib\/systemd\/system\/local-fs.target' $KSFL
 
+sed -i '/@Jolla\ Configuration\ hammerhead/a sailfish-office' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-calculator' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-email' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-notes' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-clock' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-mediaplayer' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-calendar' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-fileman' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a mce-plugin-libhybris' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-pc-suite-mode-android' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-mass-storage-android-config' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-diag-mode-android' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-developer-mode-android' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-defaults-android' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-connection-sharing-android-config' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-devicelock-plugin-encpartition' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a -feature-xt9' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a -jolla-xt9-cp' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a -jolla-xt9' $KSFL
 if [ -n "$DISABLE_TUTORIAL" ]; then
 #Beware the order of these commands is reversed in $KSFL
-    sed -i '/%post$/a chown nemo:privileged /home/nemo/.jolla-startupwizard-usersession-done' $KSFL
-    sed -i '/%post$/a chown nemo:nemo /home/nemo/.jolla-startupwizard-done'          $KSFL
-    sed -i '/%post$/a touch /home/nemo/.jolla-startupwizard-done false'              $KSFL
-    sed -i '/%post$/a touch /home/nemo/.jolla-startupwizard-usersession-done false'  $KSFL
+     sed -i '/%post$/a chown nemo:privileged /home/nemo/.jolla-startupwizard-usersession-done' $KSFL
+     sed -i '/%post$/a chown nemo:nemo /home/nemo/.jolla-startupwizard-done'          $KSFL
+     sed -i '/%post$/a touch /home/nemo/.jolla-startupwizard-done false'              $KSFL
+     sed -i '/%post$/a touch /home/nemo/.jolla-startupwizard-usersession-done false'  $KSFL
 
-    sed -i '/%post$/a dconf write "/apps/jolla-startupwizard/reached_tutorial" true' $KSFL
-    sed -i '/%post$/a dconf write "/desktop/lipstick-jolla-home/first_run" false'    $KSFL
+     sed -i '/%post$/a dconf write "/apps/jolla-startupwizard/reached_tutorial" true' $KSFL
+     sed -i '/%post$/a dconf write "/desktop/lipstick-jolla-home/first_run" false'    $KSFL
 fi
 
 

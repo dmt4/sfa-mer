@@ -135,7 +135,6 @@ export BRANCH=\${BRANCH:-$BRANCH}
 export JOBS=\${JOBS:-$JOBS}
 
 export MW_REPO=\${MW_REPO:-$MW_REPO}
-export DISABLE_TUTORIAL=\${DISABLE_TUTORIAL:-$DISABLE_TUTORIAL}
 
 
 # printf \"vars in use:
