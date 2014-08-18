@@ -31,22 +31,24 @@ if [ x"$MW_REPO" == x ]; then
   mv RPMS/*${DEVICE}* $ANDROID_ROOT/droid-local-repo/$DEVICE/
 else
   echo "we get the rpms from repo"
-fi 
+  osc -A https://api.merproject.org co nemo:devel:hw:$VENDOR:$DEVICE
+  osc getbinaries
+fi
+
 createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
 
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar local-$DEVICE-hal file://$ANDROID_ROOT/droid-local-repo/$DEVICE
 if [ -n "$MW_REPO" ]; then
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar remote-$DEVICE-hal $MW_REPO
-fi 
+fi
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu lr
-
-# addition from me (dmt)
-sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper ref -f
-sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n install droid-hal-$DEVICE
 
 
 # other middleware stuff only if no mw repo is specified
 if [ x"$MW_REPO" == x ]; then
+    sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper ref -f
+    sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n install droid-hal-$DEVICE
+
     mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install ssu domain sales
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install ssu dr sdk
@@ -180,4 +182,4 @@ if [ x"$MW_REPO" == x ]; then
     mv RPMS/*.rpm $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG
     createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install zypper ref
-fi 
+fi

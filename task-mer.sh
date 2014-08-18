@@ -36,7 +36,7 @@ ubu-chroot -r ${MER_ROOT}/sdks/ubuntu `pwd`/task-ubu.sh
 
 ./sb-setup.sh
 
-[ -z "$MW_REPO" ] && ./ahal.sh
+./ahal.sh
 
 ./build-img.sh
 
