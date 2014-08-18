@@ -16,6 +16,13 @@ function mdabspath {
     rmdir --ignore-fail-on-non-empty $1
 }
 
+# Check if git is installed
+if ! which git >/dev/null; then
+        echo "WARRNING"
+        echo "you need git to run this script"
+        return
+fi
+
 while (($#)); do
   case $1 in
   -h)
