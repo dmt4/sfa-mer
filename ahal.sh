@@ -18,14 +18,20 @@ cd $ANDROID_ROOT
 # Uncomment the following to disable the direct root access at port 2323
 # sed -i s:'$EXPLICIT_BUSYBOX':'#$EXPLICIT_BUSYBOX':g rpm/init-debug
 
-mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-device.inc build
-echo 'The above failure is expected!'
+if [ x"$MW_REPO" == x ]; then
+  mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-device.inc build
+  echo 'The above failure is expected!'
 
-mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-$DEVICE.spec build
+  mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-$DEVICE.spec build
+fi
 
 mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE
 rm -f $ANDROID_ROOT/droid-local-repo/$DEVICE/droid-hal-*rpm
-mv RPMS/*${DEVICE}* $ANDROID_ROOT/droid-local-repo/$DEVICE/
+if [ x"$MW_REPO" == x ]; then
+  mv RPMS/*${DEVICE}* $ANDROID_ROOT/droid-local-repo/$DEVICE/
+else
+  echo "we get the rpms from repo"
+fi 
 createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
 
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar local-$DEVICE-hal file://$ANDROID_ROOT/droid-local-repo/$DEVICE
@@ -38,10 +44,10 @@ sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu lr
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper ref -f
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n install droid-hal-$DEVICE
 
-mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build
 
 # other middleware stuff only if no mw repo is specified
 if [ x"$MW_REPO" == x ]; then
+    mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install ssu domain sales
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install ssu dr sdk
 
