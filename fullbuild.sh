@@ -18,7 +18,7 @@ function mdabspath {
 
 # Check if git is installed
 if ! which git >/dev/null; then
-        echo -e "WARRNING"
+        echo "WARRNING"
         echo "you need git to run this script"
         return
 fi
