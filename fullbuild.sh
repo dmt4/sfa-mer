@@ -30,6 +30,7 @@ while (($#)); do
       -jobs number       # number of parallel jobs to be used for parallel builds
       -extraname name    # string to be added in the name of the image (beware, dots are not allowed)
       -sfrelease x.y.z.p # release version of Sailfish OS against which the image is built
+      -no-education      # do not show the lenghtly user tutorial on first boot
       -dest folder       # where to place to the image
       -h displays this help\n"
     exit 0
@@ -84,6 +85,11 @@ while (($#)); do
     MW_REPO=$1
     shift
   ;;
+  -no-education)
+    shift
+    DISABLE_TUTORIAL=1
+    shift
+  ;;
   *)
     echo "unknown option! Use -h for the list of options!"
     exit 0
@@ -106,6 +112,7 @@ test -n "$EXTRA_STRING" && echo "  EXTRA_STRING=$EXTRA_STRING"
 test -n "$BRANCH"       && echo "  BRANCH=$BRANCH            "
 test -n "$JOBS"         && echo "  JOBS=$JOBS                "
 test -n "$MW_REPO"      && echo "  MW_REPO=$MW_REPO          "
+test -n "$DISABLE_TUTORIAL" && echo "  DISABLE_TUTORIAL=$DISABLE_TUTORIAL "
 
 
 [ -f ~/.hadk.env ] && source ~/.hadk.env
@@ -128,6 +135,7 @@ export BRANCH=\${BRANCH:-$BRANCH}
 export JOBS=\${JOBS:-$JOBS}
 
 export MW_REPO=\${MW_REPO:-$MW_REPO}
+export DISABLE_TUTORIAL=\${DISABLE_TUTORIAL:-$DISABLE_TUTORIAL}
 
 
 # printf \"vars in use:

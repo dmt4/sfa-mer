@@ -12,15 +12,11 @@ source ~/.hadk.env
 
 cd $ANDROID_ROOT
 
-
 mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE
 createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
 
-
 mkdir -p tmp
 KSFL=$ANDROID_ROOT/tmp/Jolla-@RELEASE@-$DEVICE-@ARCH@.ks
-
-
 
 HA_REPO="repo --name=adaptation0-$DEVICE-@RELEASE@"
 sed -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" \
@@ -30,8 +26,6 @@ if [ -n "$MW_REPO" ]; then
     HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=${MW_REPO}"
     sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
 fi
-
-
 
 # MOBS_URI="http://repo.merproject.org/obs"
 
@@ -45,6 +39,17 @@ fi
 #sed -i '/%post$/a sed -i \"s;WantedBy;RequiredBy;g\" \/lib\/systemd\/system\/system.mount' $KSFL
 sed -i '/%post$/a echo \"RequiredBy=droid-hal-init.service\" >> \/lib\/systemd\/system\/local-fs.target' $KSFL
 sed -i '/%post$/a echo \"[Install]\" >> \/lib\/systemd\/system\/local-fs.target' $KSFL
+
+if [ -n "$DISABLE_TUTORIAL" ]; then
+#Beware the order of these commands is reversed in $KSFL
+    sed -i '/%post$/a chown nemo:privileged /home/nemo/.jolla-startupwizard-usersession-done' $KSFL
+    sed -i '/%post$/a chown nemo:nemo /home/nemo/.jolla-startupwizard-done'          $KSFL
+    sed -i '/%post$/a touch /home/nemo/.jolla-startupwizard-done false'              $KSFL
+    sed -i '/%post$/a touch /home/nemo/.jolla-startupwizard-usersession-done false'  $KSFL
+
+    sed -i '/%post$/a dconf write "/apps/jolla-startupwizard/reached_tutorial" true' $KSFL
+    sed -i '/%post$/a dconf write "/desktop/lipstick-jolla-home/first_run" false'    $KSFL
+fi
 
 
 rpm/helpers/process_patterns.sh
