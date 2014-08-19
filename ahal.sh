@@ -18,9 +18,9 @@ cd $ANDROID_ROOT
 # Uncomment the following to disable the direct root access at port 2323
 # sed -i s:'$EXPLICIT_BUSYBOX':'#$EXPLICIT_BUSYBOX':g rpm/init-debug
 
+mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-device.inc build
+echo 'The above failure is expected!'
 if [ x"$MW_REPO" == x ]; then
-  mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-device.inc build
-  echo 'The above failure is expected!'
 
   mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-$DEVICE.spec build
 fi
@@ -33,6 +33,7 @@ else
   echo "we get the rpms from repo"
   osc -A https://api.merproject.org co nemo:devel:hw:$VENDOR:$DEVICE droid-hal-$DEVICE
   mv nemo:devel:hw:$VENDOR:$DEVICE/droid-hal-$DEVICE/*.rpm $ANDROID_ROOT/droid-local-repo/$DEVICE/
+  rm -rf "nemo:devel:hw:$VENDOR:$DEVICE"
 fi
 
 createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
@@ -46,9 +47,9 @@ sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu lr
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper ref -f
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n install droid-hal-$DEVICE
 
+mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build
 # other middleware stuff only if no mw repo is specified
 if [ x"$MW_REPO" == x ]; then
-    mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install ssu domain sales
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install ssu dr sdk
 

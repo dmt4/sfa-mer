@@ -37,10 +37,8 @@ export USE_CCACHE=1
 breakfast $DEVICE
 rm -f .repo/local_manifests/roomservice.xml
 
-echo "make -j$JOBS hybris-hal &> make-hybris-hal.stdoe"
-make -j$JOBS hybris-hal &> make-hybris-hal.stdoe
 
-
-
-
-
+if [ x"$MW_REPO" == x ]; then
+  echo "make -j$JOBS hybris-hal &> make-hybris-hal.stdoe"
+  make -j$JOBS hybris-hal &> make-hybris-hal.stdoe
+fi
