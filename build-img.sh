@@ -11,6 +11,10 @@
 source ~/.hadk.env
 
 cd $ANDROID_ROOT
+
+mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE
+createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
+
 mkdir -p tmp
 KSFL=$ANDROID_ROOT/tmp/Jolla-@RELEASE@-$DEVICE-@ARCH@.ks
 
@@ -18,11 +22,13 @@ HA_REPO="repo --name=adaptation0-$DEVICE-@RELEASE@"
 sed -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" \
   $ANDROID_ROOT/installroot/usr/share/kickstarts/$(basename $KSFL) > $KSFL
 
+if [ -n "$MW_REPO" ]; then
+    HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=${MW_REPO}"
+    sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
+fi
 
-MOBS_URI="http://repo.merproject.org/obs"
+# MOBS_URI="http://repo.merproject.org/obs"
 
-#HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=$MOBS_URI/sailfishos:/devel:/hw:/$DEVICE/sailfish_latest_@ARCH@/"
-#sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
 
 #HA_REPO2="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=$MOBS_URI/home:/alin:/extra/sailfish_latest_@ARCH@/"
 #sed -i -e "/^$HA_REPO.*$/a$HA_REPO2" $KSFL
@@ -31,8 +37,37 @@ MOBS_URI="http://repo.merproject.org/obs"
 #sed -i "/%post$/a rm -f \/lib\/systemd\/system\/sysinit.target.wants\/sys-kernel-debug.mount" $KSFL
 #sed -i "/%post$/a rm -f \/usr\/lib\/qt5\/plugins\/sensors\/libqtsensors_sensorfw.so" $KSFL
 #sed -i '/%post$/a sed -i \"s;WantedBy;RequiredBy;g\" \/lib\/systemd\/system\/system.mount' $KSFL
-sed -i '/%post$/a echo \"RequiredBy=droid-hal-init.service\" >> \/lib\/systemd\/system\/local-fs.target' $KSFL
-sed -i '/%post$/a echo \"[Install]\" >> \/lib\/systemd\/system\/local-fs.target' $KSFL
+#sed -i '/%post$/a echo \"RequiredBy=droid-hal-init.service\" >> \/lib\/systemd\/system\/local-fs.target' $KSFL
+#sed -i '/%post$/a echo \"[Install]\" >> \/lib\/systemd\/system\/local-fs.target' $KSFL
+
+sed -i '/@Jolla\ Configuration\ hammerhead/a sailfish-office' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-calculator' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-email' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-notes' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-clock' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-mediaplayer' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-calendar' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-fileman' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a mce-plugin-libhybris' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-pc-suite-mode-android' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-mass-storage-android-config' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-diag-mode-android' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-developer-mode-android' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-defaults-android' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-connection-sharing-android-config' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a strace' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a gstreamer0.10-droidcamsrc' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a gstreamer0.10-colorconv' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a gstreamer0.10-droideglsink' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a libgstreamer0.10-nativebuffer' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a libgstreamer0.10-gralloc' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a gstreamer0.10-omx' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a gst-av' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-devicelock-plugin-encpartition' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a -feature-xt9' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a -jolla-xt9-cp' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a -jolla-xt9' $KSFL
 
 if [ -n "$DISABLE_TUTORIAL" ]; then
 #Beware the order of these commands is reversed in $KSFL

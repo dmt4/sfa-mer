@@ -30,12 +30,13 @@ while (($#)); do
     Valid options are:
       -mer-root folder   # the place where you want MER_ROOT to point
       -android-root folder # where to download 18GiB and compile a little of it
-      -vendor vendorName # the vendor name
-      -device deviceName # the device name
-      -branch branchName # the branch name from mer hybris
-      -jobs number       # the number of parallel jobs to be used for parallel builds
+      -vendor vendorName # vendor name
+      -device deviceName # device name
+      -branch branchName # branch name from mer hybris
+      -mwrepo repo-uri   # middleware repo to be used if recompiling locally is to be avoided
+      -jobs number       # number of parallel jobs to be used for parallel builds
       -extraname name    # string to be added in the name of the image (beware, dots are not allowed)
-      -sfrelease x.y.z.p # the release version of Sailfish OS against which the image is built
+      -sfrelease x.y.z.p # release version of Sailfish OS against which the image is built
       -no-education      # do not show the lenghtly user tutorial on first boot
       -dest folder       # where to place to the image
       -h displays this help\n"
@@ -86,6 +87,11 @@ while (($#)); do
     ANDROID_ROOT=`mdabspath $1`
     shift
   ;;
+  -mwrepo)
+    shift
+    MW_REPO=$1
+    shift
+  ;;
   -no-education)
     shift
     DISABLE_TUTORIAL=1
@@ -112,6 +118,7 @@ test -n "$RELEASE"          && echo "  RELEASE=$RELEASE          "
 test -n "$EXTRA_STRING"     && echo "  EXTRA_STRING=$EXTRA_STRING"
 test -n "$BRANCH"           && echo "  BRANCH=$BRANCH            "
 test -n "$JOBS"             && echo "  JOBS=$JOBS                "
+test -n "$MW_REPO"          && echo "  MW_REPO=$MW_REPO          "
 test -n "$DISABLE_TUTORIAL" && echo "  DISABLE_TUTORIAL=$DISABLE_TUTORIAL "
 
 
@@ -135,6 +142,7 @@ export BRANCH=\${BRANCH:-$BRANCH}
 export JOBS=\${JOBS:-$JOBS}
 
 export DISABLE_TUTORIAL=\${DISABLE_TUTORIAL:-$DISABLE_TUTORIAL}
+export MW_REPO=\${MW_REPO:-$MW_REPO}
 
 
 # printf \"vars in use:
@@ -150,7 +158,9 @@ export DISABLE_TUTORIAL=\${DISABLE_TUTORIAL:-$DISABLE_TUTORIAL}
 #
 #     BRANCH=\$BRANCH
 #     JOBS=\$JOBS
+#
 #     DISABLE_TUTORIAL=\$DISABLE_TUTORIAL
+#     MW_REPO=\$MW_REPO
 # \"
 " > ~/.hadk.env
 

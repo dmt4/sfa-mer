@@ -6,7 +6,6 @@
 # - Set up Scratchbox2 for crosscompiling
 # - Build the droid-hal, the middleware & friends, and finally,
 # - Build the image!
-
 [ -z "$MERSDK" ] && $(dirname $0)/exec-mer.sh $0
 [ -z "$MERSDK" ] && exit 0
 
@@ -33,12 +32,9 @@ sudo chmod +x `which ubu-chroot`
 
 ubu-chroot -r ${MER_ROOT}/sdks/ubuntu `pwd`/task-ubu.sh
 
-
 ./sb-setup.sh
 
 ./ahal.sh
 
 ./build-img.sh
-
-
 
