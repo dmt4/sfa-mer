@@ -56,6 +56,14 @@ sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-developer-mode-android' $
 sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-defaults-android' $KSFL
 sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-connection-sharing-android-config' $KSFL
 sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a strace' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a gstreamer0.10-droidcamsrc' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a gstreamer0.10-colorconv' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a gstreamer0.10-droideglsink' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a libgstreamer0.10-nativebuffer' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a libgstreamer0.10-gralloc' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a gstreamer0.10-omx' $KSFL
+sed -i '/@Jolla\ Configuration\ hammerhead/a gst-av' $KSFL
 sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-devicelock-plugin-encpartition' $KSFL
 sed -i '/@Jolla\ Configuration\ hammerhead/a -feature-xt9' $KSFL
 sed -i '/@Jolla\ Configuration\ hammerhead/a -jolla-xt9-cp' $KSFL
