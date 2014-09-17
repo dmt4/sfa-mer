@@ -9,6 +9,7 @@
 
 source ~/.hadk.env
 
+echo -e "\e[01;32m Info: sb2 setup \e[00m"
 cd $MER_ROOT
 
 SFFE_SB2_TARGET=$MER_ROOT/targets/$VENDOR-$DEVICE-armv7hl
@@ -53,5 +54,4 @@ EOF
 
 sb2 -t $VENDOR-$DEVICE-armv7hl gcc main.c -o test
 sb2 -t $VENDOR-$DEVICE-armv7hl ./test
-
-
+echo -e "\e[01;32m Info: done sb2 setup \e[00m"

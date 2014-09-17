@@ -33,7 +33,7 @@ while (($#)); do
       -vendor vendorName # vendor name
       -device deviceName # device name
       -branch branchName # branch name from mer hybris
-      -mwrepo repo-uri   # middleware repo to be used if recompiling locally is to be avoided
+      -mwrepo repo-uri   # middleware repo to be used if recompiling locally is to be avoided pass x
       -jobs number       # number of parallel jobs to be used for parallel builds
       -extraname name    # string to be added in the name of the image (beware, dots are not allowed)
       -sfrelease x.y.z.p # release version of Sailfish OS against which the image is built
@@ -124,7 +124,6 @@ test -n "$DISABLE_TUTORIAL" && echo "  DISABLE_TUTORIAL=$DISABLE_TUTORIAL "
 
 [ -f ~/.hadk.env ] && source ~/.hadk.env
 source $(dirname $0)/hadk.env
-
 
 printf "
 export VENDOR=\${VENDOR:-$VENDOR}

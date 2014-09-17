@@ -29,16 +29,19 @@ fi
 
 cd $ANDROID_ROOT
 
-echo "repo sync -c &> repo-sync.stdoe"
+echo -e "\e[01;32m Info: repo sync -c &> repo-sync.stdoe \e[00m"
 repo sync -c &> repo-sync.stdoe
+echo -e "\e[01;32m Info: done repo sync -c &> repo-sync.stdoe \e[00m"
 
+echo -e "\e[01;32m build env, cache and breackfast \e[00m"
 source build/envsetup.sh
 export USE_CCACHE=1
 breakfast $DEVICE
 rm -f .repo/local_manifests/roomservice.xml
+echo -e "\e[01;32m done \e[00m"
 
 
-if [ x"$MW_REPO" == x ]; then
-  echo "make -j$JOBS hybris-hal &> make-hybris-hal.stdoe"
+if [ x"$MW_REPO" == xx ]; then
+  echo -e "\e[01;32m Info: make -j$JOBS hybris-hal &> make-hybris-hal.stdoe \e[00m"
   make -j$JOBS hybris-hal &> make-hybris-hal.stdoe
 fi
