@@ -12,10 +12,12 @@ source ~/.hadk.env
 
 cd $ANDROID_ROOT
 
-echo -e "\e[01;32m Info: create repo \e[00m"
-mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE
-createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
-
+#echo -e "\e[01;32m Info: create repo \e[00m"
+#mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE
+#createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
+#sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install zypper ref
+#sb2 -t $VENDOR-$DEVICE-armv7hl ssu lr
+echo -e "\e[01;33m Info: 8.2  \e[00m"
 mkdir -p tmp
 KSFL=$ANDROID_ROOT/tmp/Jolla-@RELEASE@-$DEVICE-@ARCH@.ks
 
@@ -31,40 +33,38 @@ if [ x"$MW_REPO" != xx ]; then
 fi
 
 
-echo -e "\e[01;32m Info: packages \e[00m"
-sed -i '/@Jolla\ Configuration\ hammerhead/a sailfish-office' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-calculator' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-email' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-notes' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-clock' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-mediaplayer' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-calendar' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-fileman' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a mce-plugin-libhybris' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-pc-suite-mode-android' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-mass-storage-android-config' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-diag-mode-android' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-developer-mode-android' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-defaults-android' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded-connection-sharing-android-config' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a usb-moded' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a strace' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a jolla-devicelock-plugin-encpartition' $KSFL
+echo -e "\e[01;32m Info: extra packages \e[00m"
+sed -i "/@Jolla\ Configuration\ $DEVICE/a sailfish-office" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-calculator" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-email" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-notes" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-clock" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-mediaplayer" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-calendar" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-fileman" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a mce-plugin-libhybris" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded-pc-suite-mode-android" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded-mass-storage-android-config" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded-diag-mode-android" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded-developer-mode-android" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded-defaults-android" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded-connection-sharing-android-config" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a strace" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-devicelock-plugin-encpartition" $KSFL
 if [ x"$MW_REPO" != xx ]; then 
-  sed -i '/@Jolla\ Configuration\ hammerhead/a gstreamer0.10-droidcamsrc' $KSFL
-  sed -i '/@Jolla\ Configuration\ hammerhead/a gstreamer0.10-colorconv' $KSFL
-  sed -i '/@Jolla\ Configuration\ hammerhead/a gstreamer0.10-droideglsink' $KSFL
-  sed -i '/@Jolla\ Configuration\ hammerhead/a libgstreamer0.10-nativebuffer' $KSFL
-  sed -i '/@Jolla\ Configuration\ hammerhead/a libgstreamer0.10-gralloc' $KSFL
-  sed -i '/@Jolla\ Configuration\ hammerhead/a gstreamer0.10-omx' $KSFL
-  sed -i '/@Jolla\ Configuration\ hammerhead/a gst-av' $KSFL
-else 
-  sed -i "/@Jolla\ Configuration\ hammerhead/a jolla-hw-adaptation-hammerhead" $KSFL
+  sed -i "/@Jolla\ Configuration\ $DEVICE/a gstreamer0.10-droidcamsrc" $KSFL
+  sed -i "/@Jolla\ Configuration\ $DEVICE/a gstreamer0.10-colorconv" $KSFL
+  sed -i "/@Jolla\ Configuration\ $DEVICE/a gstreamer0.10-droideglsink" $KSFL
+  sed -i "/@Jolla\ Configuration\ $DEVICE/a libgstreamer0.10-nativebuffer" $KSFL
+  sed -i "/@Jolla\ Configuration\ $DEVICE/a libgstreamer0.10-gralloc" $KSFL
+  sed -i "/@Jolla\ Configuration\ $DEVICE/a gstreamer0.10-omx" $KSFL
+  sed -i "/@Jolla\ Configuration\ $DEVICE/a gst-av" $KSFL
 fi
-sed -i '/@Jolla\ Configuration\ hammerhead/a -feature-xt9' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a -jolla-xt9-cp' $KSFL
-sed -i '/@Jolla\ Configuration\ hammerhead/a -jolla-xt9' $KSFL
-
+sed -i "/@Jolla\ Configuration\ $DEVICE/a -feature-xt9" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a -jolla-xt9-cp" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a -jolla-xt9" $KSFL
+sed -i "s;@Jolla Configuration $DEVICE;@jolla-hw-adaptation-$DEVICE;g" $KSFL
 if [ -n "$DISABLE_TUTORIAL" ]; then
 #Beware the order of these commands is reversed in $KSFL
   echo -e "\e[01;32m Info: disable tutorials \e[00m"
@@ -77,11 +77,13 @@ if [ -n "$DISABLE_TUTORIAL" ]; then
   sed -i '/%post$/a dconf write "/desktop/lipstick-jolla-home/first_run" false'    $KSFL
 fi
 
-
-echo -e "\e[01;32m Info: patterns \e[00m"
+cat $KSFL > a
+echo -e "\e[01;33m Info: 8.3  \e[00m"
+echo -e "\e[01;32m Info: create patterns \e[00m"
 rpm/helpers/process_patterns.sh
 
 
+echo -e "\e[01;33m Info: 8.4  \e[00m"
 echo -e "\e[01;32m Info: create mic \e[00m"
 # always aim for the latest:
 #RELEASE=1.0.8.19

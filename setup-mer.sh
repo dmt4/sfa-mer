@@ -6,6 +6,7 @@ source ~/.hadk.env
 
 mkdir -p ${MER_ROOT}/sdks/sdk
 
+echo -e "\e[01;33m Info: 4.2  \e[00m"
 cd $MER_ROOT
 echo -e "\e[01;32m Info: setup mer \e[00m"
 TARBALL=mer-i486-latest-sdk-rolling-chroot-armv7hl-sb2.tar.bz2

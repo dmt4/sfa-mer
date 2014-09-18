@@ -21,6 +21,7 @@ chmod a+x ~/bin/repo
 export PATH=${PATH}:${HOME}/bin
 
 
+echo -e "\e[01;33m Info: 5.1  \e[00m"
 if [ ! -d $ANDROID_ROOT ]; then
     mkdir -p $ANDROID_ROOT
     cd $ANDROID_ROOT
@@ -33,6 +34,7 @@ echo -e "\e[01;32m Info: repo sync -c &> repo-sync.stdoe \e[00m"
 repo sync -c &> repo-sync.stdoe
 echo -e "\e[01;32m Info: done repo sync -c &> repo-sync.stdoe \e[00m"
 
+echo -e "\e[01;33m Info: 5.2  \e[00m"
 echo -e "\e[01;32m build env, cache and breackfast \e[00m"
 source build/envsetup.sh
 export USE_CCACHE=1

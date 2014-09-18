@@ -166,6 +166,7 @@ export MW_REPO=\${MW_REPO:-$MW_REPO}
 
 # echo $0
 
+echo -e "\e[01;33m Info: 4.1  \e[00m"
 cp $(dirname $0)/profile-mer ~/.mersdk.profile
 cp $(dirname $0)/profile-ubu ~/.mersdkubu.profile
 
