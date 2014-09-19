@@ -22,7 +22,7 @@ cd $ANDROID_ROOT
 #mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-device.inc build
 #echo -e "\e[01;35m The above failure is expected! \e[00m"
 echo -e "\e[01;33m Info: 7.1.1 \e[00m"
-if [ -n $EXTRA_REPO] ; then 
+if [ -n $EXTRA_REPO ] ; then 
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar extra-$DEVICE-hal $nn
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper ref
 fi
