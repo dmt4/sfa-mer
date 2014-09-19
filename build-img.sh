@@ -103,4 +103,4 @@ sudo mic create fs --arch armv7hl \
   --pack-to=sfa-$DEVICE-$RELEASE$EXTRA_NAME.tar.bz2 \
   $KSFL 2>&1 | tee mic.log 
 echo -e "\e[01;32m Info: copy image \e[00m"
-cp -av sfa-${DEVICE}-ea-${RELEASE}${EXTRA_NAME}/sailfishos-${DEVICE}-release-${RELEASE}${EXTRA_NAME}.zip $IMGDEST/
+cp -av sfa-${DEVICE}-${RELEASE}${EXTRA_NAME}/sailfishos-${DEVICE}-release-${RELEASE}${EXTRA_NAME}.zip $IMGDEST/
