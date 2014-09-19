@@ -58,7 +58,7 @@ sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded" $KSFL
 sed -i "/@Jolla\ Configuration\ $DEVICE/a strace" $KSFL
 sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-devicelock-plugin-encpartition" $KSFL
 sed -i "/@Jolla\ Configuration\ $DEVICE/a sailfish-version" $KSFL
-if [ x"$MW_REPO" != xx ]; then 
+if [ -n "$EXTRA_REPO"  ]; then 
   sed -i "/@Jolla\ Configuration\ $DEVICE/a gstreamer0.10-droidcamsrc" $KSFL
   sed -i "/@Jolla\ Configuration\ $DEVICE/a gstreamer0.10-colorconv" $KSFL
   sed -i "/@Jolla\ Configuration\ $DEVICE/a gstreamer0.10-droideglsink" $KSFL
