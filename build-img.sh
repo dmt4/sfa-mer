@@ -31,6 +31,11 @@ if [ x"$MW_REPO" != xx ]; then
     HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=${MW_REPO}"
     sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
 fi
+if [ -n "$EXTRA_REPO"  ]; then
+    echo -e "\e[01;32m Info: adaptation2 \e[00m"
+    HA_REPO2="repo --name=adaptation2-$DEVICE-@RELEASE@ --baseurl=${EXTRA_REPO}"
+    sed -i -e "/^$HA_REPO.*$/a$HA_REPO2" $KSFL
+fi
 
 
 echo -e "\e[01;32m Info: extra packages \e[00m"
@@ -52,6 +57,7 @@ sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded-connection-sharing-android-c
 sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded" $KSFL
 sed -i "/@Jolla\ Configuration\ $DEVICE/a strace" $KSFL
 sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-devicelock-plugin-encpartition" $KSFL
+sed -i "/@Jolla\ Configuration\ $DEVICE/a sailfish-version" $KSFL
 if [ x"$MW_REPO" != xx ]; then 
   sed -i "/@Jolla\ Configuration\ $DEVICE/a gstreamer0.10-droidcamsrc" $KSFL
   sed -i "/@Jolla\ Configuration\ $DEVICE/a gstreamer0.10-colorconv" $KSFL
@@ -95,7 +101,6 @@ sudo mic create fs --arch armv7hl \
   --record-pkgs=name,url \
   --outdir=sfa-$DEVICE-$RELEASE$EXTRA_NAME \
   --pack-to=sfa-$DEVICE-$RELEASE$EXTRA_NAME.tar.bz2 \
-  $KSFL
+  $KSFL 2>&1 | tee mic.log 
 echo -e "\e[01;32m Info: copy image \e[00m"
 cp -av sfa-${DEVICE}-ea-${RELEASE}${EXTRA_NAME}/sailfishos-${DEVICE}-release-${RELEASE}${EXTRA_NAME}.zip $IMGDEST/
-  cat $KSFL > a

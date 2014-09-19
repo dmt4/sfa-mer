@@ -34,6 +34,7 @@ while (($#)); do
       -device deviceName # device name
       -branch branchName # branch name from mer hybris
       -mwrepo repo-uri   # middleware repo to be used if recompiling locally is to be avoided pass x
+      -extrarepo repo-uri   # extra repo to be used if you want to pass extra packages
       -jobs number       # number of parallel jobs to be used for parallel builds
       -extraname name    # string to be added in the name of the image (beware, dots are not allowed)
       -sfrelease x.y.z.p # release version of Sailfish OS against which the image is built
@@ -92,6 +93,11 @@ while (($#)); do
     MW_REPO=$1
     shift
   ;;
+  -extrarepo)
+    shift
+    EXTRA_REPO=$1
+    shift
+  ;;
   -no-education)
     shift
     DISABLE_TUTORIAL=1
@@ -119,6 +125,7 @@ test -n "$EXTRA_STRING"     && echo "  EXTRA_STRING=$EXTRA_STRING"
 test -n "$BRANCH"           && echo "  BRANCH=$BRANCH            "
 test -n "$JOBS"             && echo "  JOBS=$JOBS                "
 test -n "$MW_REPO"          && echo "  MW_REPO=$MW_REPO          "
+test -n "$EXTRA_REPO"       && echo "  EXTRA_REPO=$EXTRA_REPO          "
 test -n "$DISABLE_TUTORIAL" && echo "  DISABLE_TUTORIAL=$DISABLE_TUTORIAL "
 
 
@@ -142,6 +149,7 @@ export JOBS=\${JOBS:-$JOBS}
 
 export DISABLE_TUTORIAL=\${DISABLE_TUTORIAL:-$DISABLE_TUTORIAL}
 export MW_REPO=\${MW_REPO:-$MW_REPO}
+export EXTRA_REPO=\${EXTRA_REPO:-$EXTRA_REPO}
 
 
 # printf \"vars in use:
@@ -160,6 +168,7 @@ export MW_REPO=\${MW_REPO:-$MW_REPO}
 #
 #     DISABLE_TUTORIAL=\$DISABLE_TUTORIAL
 #     MW_REPO=\$MW_REPO
+#     EXTRA_REPO=\$EXTRA_REPO
 # \"
 " > ~/.hadk.env
 

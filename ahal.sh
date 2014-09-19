@@ -22,9 +22,15 @@ cd $ANDROID_ROOT
 #mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-device.inc build
 #echo -e "\e[01;35m The above failure is expected! \e[00m"
 echo -e "\e[01;33m Info: 7.1.1 \e[00m"
+if [ -n $EXTRA_REPO] ; then 
+  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar extra-$DEVICE-hal $nn
+  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper ref
+fi
 if [ x"$MW_REPO" == xx ]; then
-  echo -e "\e[01;32m Info: mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-$DEVICE.spec build &> $DEVICE.log \e[00m"
-  mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-$DEVICE.spec build &> $DEVICE.log
+  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper in qt5-qttools-kmap2qmap repomd-pattern-builder
+  echo -e "\e[01;32m Info: mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-$DEVICE.spec build &> droid-hal-$DEVICE.log \e[00m"
+  mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-$DEVICE.spec build &> droid-hal-$DEVICE.log
+ tail -n 5 droid-hal-$DEVICE.log
 fi
 echo -e "\e[01;32m Info:: end of  droid-hal-$DEVICE build\e[00m"
 
@@ -45,7 +51,6 @@ createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
 echo -e "\e[01;33m Info: 7.1.3 \e[00m"
 echo -e "\e[01;32m Info: Add local repo\e[00m"
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar local-$DEVICE-hal file://$ANDROID_ROOT/droid-local-repo/$DEVICE
-
 if [  x"$MW_REPO" != xx ]; then
   echo -e "\e[01;32m Info: Add remote repo\e[00m"
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar remote-$DEVICE-hal $MW_REPO
@@ -53,11 +58,11 @@ fi
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu lr
 
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper ref -f
-sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n install droid-hal-$DEVICE &> droid-hal-$DEVICE.log
-
+sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n install droid-hal-$DEVICE 
 echo -e "\e[01;33m Info: 7.1.4 \e[00m"
 echo -e "\e[01;32m Info: mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build &> droid-hal-configs.log \e[00m"
 mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build &> droid-hal-configs.log
+tail -n 5 droid-hal-configs.log
 # other middleware stuff only if no mw repo is specified
 if [ x"$MW_REPO" == xx ]; then
 
@@ -86,19 +91,16 @@ if [ x"$MW_REPO" == xx ]; then
     fi
     echo -e "\e[01;32m Info: update submodule $PKG\e[00m"
     git submodule update
-#    version=$(grep Version rpm/libhybris.spec | awk '{print $2}')
-#    mkdir -p libhybris-$version
-#    cp -r libhybris libhybris-$version/
-#    tar -cjf rpm/libhybris-${version}.tar.bz2  libhybris-$version
+    cd $PKG
     echo -e "\e[01;32m Info: mb2 -s ../rpm/$PKG.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
-    mb2 -s ../rpm/$PKG.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log 
+    mb2 -s ../rpm/$PKG.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log
+    tail -n 5 $PKG.log 
     mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/
     rm -f $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/*.rpm
     mv RPMS/*.rpm $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG
     createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install zypper ref
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-build zypper -n rm mesa-llvmpipe
-
 
     PKG=qt5-qpa-hwcomposer-plugin
     echo -e "\e[01;32m Info: build $PKG\e[00m"
@@ -118,6 +120,7 @@ if [ x"$MW_REPO" == xx ]; then
 #    tar -cjf rpm/${PKG}-${version}.tar.bz2  ${PKG}-$version
     echo -e "\e[01;32m Info: mb2 -s rpm/$PKG.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
     mb2 -s rpm/$PKG.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log 
+    tail -n 5 $PKG.log 
     mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/
     rm -f $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/*.rpm
     mv RPMS/*.rpm $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG
@@ -145,6 +148,7 @@ if [ x"$MW_REPO" == xx ]; then
 #    tar -cjf rpm/${OTHER_RANDOM_NAME}-${version}.tar.bz2  ${OTHER_RANDOM_NAME}-$version
     echo -e "\e[01;32m Info: mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
     mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log
+    tail -n 5 $PKG.log 
     mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/
     rm -f $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/*.rpm
     mv RPMS/*.rpm $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG
@@ -171,6 +175,7 @@ if [ x"$MW_REPO" == xx ]; then
 #    tar -cjf rpm/${PKG}-${version}.tar.gz  ${PKG}-$version
     echo -e "\e[01;32m Info: mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
     mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log
+    tail -n 5 $PKG.log 
     mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/
     rm -f $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/*.rpm
     mv RPMS/*.rpm $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG
@@ -197,6 +202,7 @@ if [ x"$MW_REPO" == xx ]; then
 #    tar -cjf rpm/${PKG}-${version}.tar.bz2  ${PKG}-$version
     echo -e "\e[01;32m Info: mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
     mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log
+    tail -n 5 $PKG.log 
     mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/
     rm -f $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/*.rpm
     mv RPMS/*.rpm $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG
@@ -225,6 +231,7 @@ if [ x"$MW_REPO" == xx ]; then
 #    tar -cjf rpm/${PKG}-${version}.tar.bz2  ${PKG}-$version
     echo -e "\e[01;32m Info: mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
     mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log
+    tail -n 5 $PKG.log 
     mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/
     rm -f $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/*.rpm
     mv RPMS/*.rpm $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG
@@ -250,6 +257,7 @@ if [ x"$MW_REPO" == xx ]; then
 #    tar -cjf rpm/${PKG}-${version}.tar.gz  ${PKG}-$version
     echo -e "\e[01;32m Info: mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
     mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log
+    tail -n 5 $PKG.log 
     mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/
     rm -f $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/*.rpm
     mv RPMS/*.rpm $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG
@@ -275,6 +283,7 @@ if [ x"$MW_REPO" == xx ]; then
 #    tar -cjf rpm/${PKG}-${version}.tar.bz2  ${PKG}-$version
     echo -e "\e[01;32m Info: mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
     mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log
+    tail -n 5 $PKG.log 
     mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/
     rm -f $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG/*.rpm
     mv RPMS/*.rpm $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG
