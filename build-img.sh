@@ -26,50 +26,31 @@ HA_REPO="repo --name=adaptation0-$DEVICE-@RELEASE@"
 sed -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" \
   $ANDROID_ROOT/installroot/usr/share/kickstarts/$(basename $KSFL) > $KSFL
 
-if [ x"$MW_REPO" != xx ]; then
-    echo -e "\e[01;32m Info: adaptation1 \e[00m"
-    HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=${MW_REPO}"
-    sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
-fi
 if [ -n "$EXTRA_REPO"  ]; then
     echo -e "\e[01;32m Info: adaptation2 \e[00m"
     HA_REPO2="repo --name=adaptation2-$DEVICE-@RELEASE@ --baseurl=${EXTRA_REPO}"
     sed -i -e "/^$HA_REPO.*$/a$HA_REPO2" $KSFL
 fi
-
+if [ x"$MW_REPO" != xx ]; then
+    echo -e "\e[01;32m Info: adaptation1 \e[00m"
+    HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=${MW_REPO}"
+    sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
+fi
 
 echo -e "\e[01;32m Info: extra packages \e[00m"
-sed -i "/@Jolla\ Configuration\ $DEVICE/a sailfish-office" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-calculator" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-email" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-notes" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-clock" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-mediaplayer" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-calendar" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-fileman" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a mce-plugin-libhybris" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded-pc-suite-mode-android" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded-mass-storage-android-config" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded-diag-mode-android" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded-developer-mode-android" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded-defaults-android" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded-connection-sharing-android-config" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a usb-moded" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a strace" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a jolla-devicelock-plugin-encpartition" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a sailfish-version" $KSFL
+PACKAGES_TO_ADD="sailfish-office jolla-calculator jolla-email jolla-notes jolla-clock jolla-mediaplayer jolla-calendar jolla-fileman mce-plugin-libhybris usb-moded-pc-suite-mode-android usb-moded-mass-storage-android-config usb-moded-diag-mode-android usb-moded-developer-mode-android usb-moded-defaults-android usb-moded-connection-sharing-android-config usb-moded strace jolla-devicelock-plugin-encpartition sailfish-version"
 if [ -n "$EXTRA_REPO"  ]; then 
-  sed -i "/@Jolla\ Configuration\ $DEVICE/a gstreamer0.10-droidcamsrc" $KSFL
-  sed -i "/@Jolla\ Configuration\ $DEVICE/a gstreamer0.10-colorconv" $KSFL
-  sed -i "/@Jolla\ Configuration\ $DEVICE/a gstreamer0.10-droideglsink" $KSFL
-  sed -i "/@Jolla\ Configuration\ $DEVICE/a libgstreamer0.10-nativebuffer" $KSFL
-  sed -i "/@Jolla\ Configuration\ $DEVICE/a libgstreamer0.10-gralloc" $KSFL
-  sed -i "/@Jolla\ Configuration\ $DEVICE/a gstreamer0.10-omx" $KSFL
-  sed -i "/@Jolla\ Configuration\ $DEVICE/a gst-av" $KSFL
+  PACKAGES_TO_ADD="$PACKAGES_TO_ADD gstreamer0.10-droidcamsrc gstreamer0.10-colorconv gstreamer0.10-droideglsink libgstreamer0.10-nativebuffer libgstreamer0.10-gralloc gstreamer0.10-omx gst-av"
 fi
-sed -i "/@Jolla\ Configuration\ $DEVICE/a -feature-xt9" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a -jolla-xt9-cp" $KSFL
-sed -i "/@Jolla\ Configuration\ $DEVICE/a -jolla-xt9" $KSFL
+for pack in $PACKAGES_TO_ADD; do 
+  sed -i "/@Jolla\ Configuration\ $DEVICE/a $pack" $KSFL
+done
+
+PACKAGES_TO_REMOVE="feature-xt9 jolla-xt9-cp jolla-xt9"
+for pack in $PACKAGES_TO_REMOVE; do 
+  sed -i "/@Jolla\ Configuration\ $DEVICE/a -$pack" $KSFL
+done
+
 sed -i "s;@Jolla Configuration $DEVICE;@jolla-hw-adaptation-$DEVICE;g" $KSFL
 if [ -n "$DISABLE_TUTORIAL" ]; then
 #Beware the order of these commands is reversed in $KSFL
