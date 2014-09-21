@@ -101,7 +101,6 @@ while (($#)); do
   -no-education)
     shift
     DISABLE_TUTORIAL=1
-    shift
   ;;
   *)
     echo "unknown option! Use -h for the list of options!"

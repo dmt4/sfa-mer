@@ -7,7 +7,7 @@ The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 po
 
   - Read the scripts starting from fullbuild.sh and try to understand what goes on and why! Description of the accepted options is printed by `fullbuild.sh -h`.
 
-  - Backup ~/.hadk.env, ~/.mersdk.profile and ~/.mersdkubu.profile if you with to keep them. They will be overwriten!
+  - Backup ~/.hadk.env, ~/.mersdk.profile and ~/.mersdkubu.profile if you want to keep them. They will be overwriten!
 
   - Make sure the .sh files are executable and start the 'fullbuild.sh' script. After a shortwhile it will ask for the root password to enter the Mer chroot.
 
