@@ -34,6 +34,16 @@ echo -e "\e[01;32m Info: repo sync -c &> repo-sync.stdoe \e[00m"
 repo sync -c &> repo-sync.stdoe
 echo -e "\e[01;32m Info: done repo sync -c &> repo-sync.stdoe \e[00m"
 
+
+echo -e "\e[01;32m Info: cloning sledges/droid-hal-device in rpm \e[00m"
+rm -rf rpm
+git clone https://github.com/sledges/droid-hal-device rpm
+pushd rpm
+git checkout split-version
+popd
+
+
+
 echo -e "\e[01;33m Info: 5.2  \e[00m"
 echo -e "\e[01;32m build env, cache and breackfast \e[00m"
 source build/envsetup.sh
