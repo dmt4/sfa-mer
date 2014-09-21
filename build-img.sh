@@ -63,7 +63,16 @@ if [ -n "$DISABLE_TUTORIAL" ]; then
   sed -i '/%post$/a dconf write "/apps/jolla-startupwizard/reached_tutorial" true' $KSFL
   sed -i '/%post$/a dconf write "/desktop/lipstick-jolla-home/first_run" false'    $KSFL
 fi
+echo -e "\e[01;33m Info: Add adaptation and extra repos in image  \e[00m"
 
+
+if [ -n "$EXTRA_REPO"  ]; then
+  sed -i "/begin 60_ssu/a ssu ar extra $EXTRA_REPO" $KSFL
+fi
+if [ x"$MW_REPO" != xx ]; then
+  sed -i "/begin 60_ssu/a ssu ar dhd $MW_REPO" $KSFL
+  sed -i "/begin 60_ssu/a ssu dr adaptation0" $KSFL
+fi
 cat $KSFL > a
 echo -e "\e[01;33m Info: 8.3  \e[00m"
 echo -e "\e[01;32m Info: create patterns \e[00m"
