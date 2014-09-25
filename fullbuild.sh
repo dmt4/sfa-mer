@@ -33,8 +33,9 @@ while (($#)); do
       -vendor vendorName # vendor name
       -device deviceName # device name
       -branch branchName # branch name from mer hybris
-      -mwrepo repo-uri   # middleware repo to be used if recompiling locally is to be avoided pass x
-      -extrarepo repo-uri   # extra repo to be used if you want to pass extra packages
+      -dhdrepo repo-uri  # dhd repo to be used if recompiling locally is to be avoided
+      -mwrepo repo-uri   # middleware repo to be used if recompiling locally is to be avoided
+      -extrarepo repo-uri # extra repo to be used if you want to pass extra packages
       -jobs number       # number of parallel jobs to be used for parallel builds
       -extraname name    # string to be added in the name of the image (beware, dots are not allowed)
       -sfrelease x.y.z.p # release version of Sailfish OS against which the image is built
@@ -88,6 +89,11 @@ while (($#)); do
     ANDROID_ROOT=`mdabspath $1`
     shift
   ;;
+  -dhdrepo)
+    shift
+    DHD_REPO=$1
+    shift
+  ;;
   -mwrepo)
     shift
     MW_REPO=$1
@@ -123,7 +129,8 @@ test -n "$RELEASE"          && echo "  RELEASE=$RELEASE          "
 test -n "$EXTRA_STRING"     && echo "  EXTRA_STRING=$EXTRA_STRING"
 test -n "$BRANCH"           && echo "  BRANCH=$BRANCH            "
 test -n "$JOBS"             && echo "  JOBS=$JOBS                "
-test -n "$MW_REPO"          && echo "  MW_REPO=$MW_REPO          "
+test -n "$DHD_REPO"          && echo "  DHD_REPO=$DHD_REPO          "
+test -n "$MW_REPO"       && echo "  MW_REPO=$MW_REPO          "
 test -n "$EXTRA_REPO"       && echo "  EXTRA_REPO=$EXTRA_REPO          "
 test -n "$DISABLE_TUTORIAL" && echo "  DISABLE_TUTORIAL=$DISABLE_TUTORIAL "
 
@@ -147,6 +154,7 @@ export BRANCH=\${BRANCH:-$BRANCH}
 export JOBS=\${JOBS:-$JOBS}
 
 export DISABLE_TUTORIAL=\${DISABLE_TUTORIAL:-$DISABLE_TUTORIAL}
+export DHD_REPO=\${DHD_REPO:-$DHD_REPO}
 export MW_REPO=\${MW_REPO:-$MW_REPO}
 export EXTRA_REPO=\${EXTRA_REPO:-$EXTRA_REPO}
 
@@ -166,6 +174,7 @@ export EXTRA_REPO=\${EXTRA_REPO:-$EXTRA_REPO}
 #     JOBS=\$JOBS
 #
 #     DISABLE_TUTORIAL=\$DISABLE_TUTORIAL
+#     DHD_REPO=\$DHD_REPO
 #     MW_REPO=\$MW_REPO
 #     EXTRA_REPO=\$EXTRA_REPO
 # \"

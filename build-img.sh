@@ -12,11 +12,11 @@ source ~/.hadk.env
 
 cd $ANDROID_ROOT
 
-echo -e "\e[01;32m Info: create repo \e[00m"
 mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE
 createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install zypper ref
 sb2 -t $VENDOR-$DEVICE-armv7hl ssu lr
+
 
 echo -e "\e[01;33m Info: 8.2  \e[00m"
 mkdir -p tmp
@@ -26,21 +26,26 @@ echo -e "\e[01;32m Info: adaptation \e[00m"
 HA_REPO="repo --name=adaptation0-$DEVICE-@RELEASE@"
 sed -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" \
   $ANDROID_ROOT/installroot/usr/share/kickstarts/$(basename $KSFL) > $KSFL
+if [ x"$DHD_REPO" != xx ]; then
+  echo -e "\e[01;32m Info: dhd \e[00m"
+  HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=${DHD_REPO}"
+  sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
+fi
 
-if [ -n "$EXTRA_REPO"  ]; then
-    echo -e "\e[01;32m Info: add extra repo \e[00m"
-    HA_REPO2="repo --name=extra-$DEVICE-@RELEASE@ --baseurl=${EXTRA_REPO}"
+if [ x"$MW_REPO" != xx ]; then
+    echo -e "\e[01;32m Info: add mw repo \e[00m"
+    HA_REPO2="repo --name=mw-$DEVICE-@RELEASE@ --baseurl=${MW_REPO}"
     sed -i -e "/^$HA_REPO.*$/a$HA_REPO2" $KSFL
 fi
-if [ x"$MW_REPO" != xx ]; then
-    echo -e "\e[01;32m Info: adaptation1 \e[00m"
-    HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=${MW_REPO}"
-    sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
+if [ -n "$EXTRA_REPO" ]; then
+    echo -e "\e[01;32m Info: add mw repo \e[00m"
+    HA_REPO3="repo --name=extra-$DEVICE-@RELEASE@ --baseurl=${EXTRA_REPO}"
+    sed -i -e "/^$HA_REPO.*$/a$HA_REPO3" $KSFL
 fi
 
 echo -e "\e[01;32m Info: extra packages \e[00m"
 PACKAGES_TO_ADD="sailfish-office jolla-calculator jolla-email jolla-notes jolla-clock jolla-mediaplayer jolla-calendar jolla-fileman mce-plugin-libhybris usb-moded-pc-suite-mode-android usb-moded-mass-storage-android-config usb-moded-diag-mode-android usb-moded-developer-mode-android usb-moded-defaults-android usb-moded-connection-sharing-android-config usb-moded strace jolla-devicelock-plugin-encpartition sailfish-version"
-if [ -n "$EXTRA_REPO"  ]; then 
+if [  x"$MW_REPO" != xx ]; then 
   PACKAGES_TO_ADD="$PACKAGES_TO_ADD gstreamer0.10-droidcamsrc gstreamer0.10-colorconv gstreamer0.10-droideglsink libgstreamer0.10-nativebuffer libgstreamer0.10-gralloc gstreamer0.10-omx gst-av"
 fi
 for pack in $PACKAGES_TO_ADD; do 
@@ -51,6 +56,7 @@ PACKAGES_TO_REMOVE="feature-xt9 jolla-xt9-cp jolla-xt9 ofono-configs-mer ssu-ven
 for pack in $PACKAGES_TO_REMOVE; do 
   sed -i "/@Jolla\ Configuration\ $DEVICE/a -$pack" $KSFL
 done
+#  sed -i "s;@Jolla\ Configuration\ $DEVICE;@jolla-hw-adaptation-$DEVICE;g" $KSFL
 
 if [ -n "$DISABLE_TUTORIAL" ]; then
 #Beware the order of these commands is reversed in $KSFL
@@ -66,13 +72,16 @@ fi
 echo -e "\e[01;33m Info: Add adaptation and extra repos in image  \e[00m"
 
 
-if [ -n "$EXTRA_REPO"  ]; then
+if [ x"$MW_REPO" != xx  ]; then
+  sed -i "/begin 60_ssu/a ssu ar mw $MW_REPO" $KSFL
+fi
+if [ -n "$EXTRA_REPO" ]; then
   sed -i "/begin 60_ssu/a ssu ar extra $EXTRA_REPO" $KSFL
 fi
-if [ x"$MW_REPO" != xx ]; then
-  sed -i "/begin 60_ssu/a ssu ar dhd $MW_REPO" $KSFL
-  sed -i "/begin 60_ssu/a ssu dr adaptation0" $KSFL
+if [ x"$DHD_REPO" != xx ]; then
+  sed -i "/begin 60_ssu/a ssu ar dhd $DHD_REPO" $KSFL
 fi
+sed -i "/begin 60_ssu/a ssu dr adaptation0" $KSFL
 cat $KSFL > a
 echo -e "\e[01;33m Info: 8.3  \e[00m"
 echo -e "\e[01;32m Info: create patterns \e[00m"
@@ -94,3 +103,21 @@ sudo mic create fs --arch armv7hl \
   $KSFL 2>&1 | tee mic.log 
 echo -e "\e[01;32m Info: copy image \e[00m"
 cp -av sfa-${DEVICE}-${RELEASE}${EXTRA_NAME}/sailfishos-${DEVICE}-release-${RELEASE}${EXTRA_NAME}.zip $IMGDEST/
+
+#clean repos in target
+echo -e "\e[01;32m Info: clean repos in target \e[00m"
+
+if [  x$MW_REPO != xx ] ; then 
+  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu rr mw-$DEVICE-hal
+fi
+if [  -n $EXTRA_REPO ] ; then 
+  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu rr extra-$DEVICE
+fi
+if [  x$DHD_REPO != xx ] ; then 
+  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu rr dhd-$DEVICE-hal
+fi
+sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu rr local-$DEVICE-hal
+sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper ref -f
+sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu lr
+
+ 

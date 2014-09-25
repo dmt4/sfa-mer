@@ -18,19 +18,28 @@ cd $ANDROID_ROOT
 # Uncomment the following to disable the direct root access at port 2323
 # sed -i s:'$EXPLICIT_BUSYBOX':'#$EXPLICIT_BUSYBOX':g rpm/init-debug
 
-#echo -e "\e[01;35m The above failure is expected! \e[00m"
-#mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-device.inc build
-#echo -e "\e[01;35m The above failure is expected! \e[00m"
+echo -e "\e[01;33m Info: bad workaround shall be removed asap \e[00m"
+echo -e "\e[01;33m Info: sudo rpm -U http://repo.merproject.org/obs/mer-tools:/testing/latest_i486/noarch/sdk-utils-0.65-1.19.1.noarch \e[00m"
+sudo rpm -U http://repo.merproject.org/obs/mer-tools:/testing/latest_i486/noarch/sdk-utils-0.65-1.19.1.noarch
 echo -e "\e[01;33m Info: 7.1.1 \e[00m"
-if [ -n $EXTRA_REPO ] ; then 
-  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar extra-$DEVICE-hal $EXTRA_REPO
-  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper ref
+if [  -n $EXTRA_REPO ] ; then 
+  echo -e "\e[01;32m Info: Add remote extra repo\e[00m"
+  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar extra-$DEVICE $EXTRA_REPO
 fi
-if [ x"$MW_REPO" == xx ]; then
-  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper in qt5-qttools-kmap2qmap repomd-pattern-builder
+if [  x$MW_REPO != xx ] ; then 
+  echo -e "\e[01;32m Info: Add remote mw repo\e[00m"
+  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar mw-$DEVICE-hal $MW_REPO
+fi
+if [ x"$DHD_REPO" == xx ]; then
+  echo -e "\e[01;33m Info: bad workaround shall be removed asap \e[00m"
+  echo -e "\e[01;33m Info: sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper in qt5-qttools-kmap2qmap repomd-pattern-builder cmake \e[00m"
+  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper in qt5-qttools-kmap2qmap repomd-pattern-builder cmake
   echo -e "\e[01;32m Info: mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-$DEVICE.spec build &> droid-hal-$DEVICE.log \e[00m"
   mb2 -t $VENDOR-$DEVICE-armv7hl -s rpm/droid-hal-$DEVICE.spec build &> droid-hal-$DEVICE.log
- tail -n 5 droid-hal-$DEVICE.log
+  tail -n 5 droid-hal-$DEVICE.log
+else
+  echo -e "\e[01;32m Info: Add remote dhd repo\e[00m"
+  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar dhd-$DEVICE-hal $DHD_REPO
 fi
 echo -e "\e[01;32m Info:: end of  droid-hal-$DEVICE build\e[00m"
 
@@ -38,23 +47,18 @@ echo -e "\e[01;33m Info: 7.1.2 \e[00m"
 rm -rf $ANDROID_ROOT/droid-local-repo/$DEVICE
 mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE
 rm -f $ANDROID_ROOT/droid-local-repo/$DEVICE/droid-hal-*rpm
-if [ x"$MW_REPO" == xx ]; then
+if [  x"$DHD_REPO" != xx  ]; then
+  echo -e "\e[01;32m Info: get dhd rpms from repo\e[00m"
+  patternrpm=$(sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper se -s $DEVICE-patterns | tail -n 1 | awk '{print $2"-"$6"."$8".rpm" }')
+  pushd $ANDROID_ROOT/droid-local-repo/$DEVICE ; curl -O $DHD_REPO/armv7hl/$patternrpm  ; ls;popd
+else
   echo -e "\e[01;32m Info: move dhd rpms\e[00m"
   mv RPMS/*${DEVICE}* $ANDROID_ROOT/droid-local-repo/$DEVICE/
-else
-  echo -e "\e[01;32m Info: get dhd rpms from repo\e[00m"
-  osc -A https://api.merproject.org co nemo:devel:hw:$VENDOR:$DEVICE droid-hal-$DEVICE
-  mv nemo:devel:hw:$VENDOR:$DEVICE/droid-hal-$DEVICE/*.rpm $ANDROID_ROOT/droid-local-repo/$DEVICE/
-  rm -rf "nemo:devel:hw:$VENDOR:$DEVICE"
 fi
 createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
 echo -e "\e[01;33m Info: 7.1.3 \e[00m"
-echo -e "\e[01;32m Info: Add local repo\e[00m"
+echo -e "\e[01;32m Info: Add droid-local-repo repo\e[00m"
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar local-$DEVICE-hal file://$ANDROID_ROOT/droid-local-repo/$DEVICE
-if [  x"$MW_REPO" != xx ]; then
-  echo -e "\e[01;32m Info: Add remote repo\e[00m"
-  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar remote-$DEVICE-hal $MW_REPO
-fi
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu lr
 
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper ref -f
@@ -114,10 +118,6 @@ if [ x"$MW_REPO" == xx ]; then
       git clone https://github.com/mer-hybris/$PKG.git
       cd $PKG
     fi
-#    version=$(grep Version rpm/$PKG.spec | awk '{print $2}')
-#    mkdir -p ${PKG}-$version
-#    cp -r hwcomposer ${PKG}-$version/
-#    tar -cjf rpm/${PKG}-${version}.tar.bz2  ${PKG}-$version
     echo -e "\e[01;32m Info: mb2 -s rpm/$PKG.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
     mb2 -s rpm/$PKG.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log 
     tail -n 5 $PKG.log 
@@ -142,10 +142,6 @@ if [ x"$MW_REPO" == xx ]; then
       git clone https://github.com/mer-hybris/$PKG.git
       cd $PKG
     fi
-#    version=$(grep Version rpm/$SPEC.spec | awk '{print $2}')
-#    mkdir -p ${OTHER_RANDOM_NAME}-$version
-#    cp -r * ${OTHER_RANDOM_NAME}-$version/
-#    tar -cjf rpm/${OTHER_RANDOM_NAME}-${version}.tar.bz2  ${OTHER_RANDOM_NAME}-$version
     echo -e "\e[01;32m Info: mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
     mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log
     tail -n 5 $PKG.log 
@@ -169,10 +165,6 @@ if [ x"$MW_REPO" == xx ]; then
       git clone https://github.com/mer-hybris/$PKG.git
       cd $PKG
     fi
-#    version=$(grep Version rpm/$SPEC.spec | awk '{print $2}')
-#    mkdir -p ${PKG}-$version
-#    cp -r * ${PKG}-$version/
-#    tar -cjf rpm/${PKG}-${version}.tar.gz  ${PKG}-$version
     echo -e "\e[01;32m Info: mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
     mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log
     tail -n 5 $PKG.log 
@@ -196,10 +188,6 @@ if [ x"$MW_REPO" == xx ]; then
       git clone https://github.com/mer-hybris/$PKG.git
       cd $PKG
     fi
-#    version=$(grep Version rpm/$SPEC.spec | awk '{print $2}')
-#    mkdir -p ${PKG}-$version
-#    cp -r * ${PKG}-$version/
-#    tar -cjf rpm/${PKG}-${version}.tar.bz2  ${PKG}-$version
     echo -e "\e[01;32m Info: mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
     mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log
     tail -n 5 $PKG.log 
@@ -223,12 +211,6 @@ if [ x"$MW_REPO" == xx ]; then
       git clone https://github.com/mer-hybris/$PKG.git
       cd $PKG
     fi
-#    pulseversion=$(grep "define pulseversion" rpm/$SPEC.spec | awk '{print $3}')
-#    ve=$(grep Version rpm/$SPEC.spec | awk '{print $2}')
-#    version=$(echo $ve | sed "s;%{pulseversion};$pulseversion;g")
-#    mkdir -p ${PKG}-$version
-#    cp -r * ${PKG}-$version/
-#    tar -cjf rpm/${PKG}-${version}.tar.bz2  ${PKG}-$version
     echo -e "\e[01;32m Info: mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
     mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log
     tail -n 5 $PKG.log 
@@ -251,10 +233,6 @@ if [ x"$MW_REPO" == xx ]; then
       git clone https://github.com/nemomobile/$PKG.git
       cd $PKG
     fi
-#    version=$(grep Version rpm/$SPEC.spec | awk '{print $2}')
-#    mkdir -p ${PKG}-$version
-#    cp -r * ${PKG}-$version/
-#    tar -cjf rpm/${PKG}-${version}.tar.gz  ${PKG}-$version
     echo -e "\e[01;32m Info: mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
     mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log
     tail -n 5 $PKG.log 
@@ -277,10 +255,6 @@ if [ x"$MW_REPO" == xx ]; then
       git clone https://github.com/nemomobile/$PKG.git
       cd $PKG
     fi
-#    version=$(grep Version rpm/$SPEC.spec | awk '{print $2}')
-#    mkdir -p ${PKG}-$version
-#    cp -r * ${PKG}-$version/
-#    tar -cjf rpm/${PKG}-${version}.tar.bz2  ${PKG}-$version
     echo -e "\e[01;32m Info: mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
     mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log
     tail -n 5 $PKG.log 
