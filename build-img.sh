@@ -24,8 +24,13 @@ KSFL=$ANDROID_ROOT/tmp/Jolla-@RELEASE@-$DEVICE-@ARCH@.ks
 
 echo -e "\e[01;32m Info: adaptation \e[00m"
 HA_REPO="repo --name=adaptation0-$DEVICE-@RELEASE@"
-sed -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" \
-  $ANDROID_ROOT/installroot/usr/share/kickstarts/$(basename $KSFL) > $KSFL
+if [ x"$DHD_REPO" != xx ]; then
+   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install cat /usr/share/kickstarts/Jolla-@RELEASE@-hammerhead-@ARCH@.ks > $KSFL
+   sed -i -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" $KSFL
+else 
+  sed -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" \
+    $ANDROID_ROOT/installroot/usr/share/kickstarts/$(basename $KSFL) > $KSFL
+fi 
 if [ x"$DHD_REPO" != xx ]; then
   echo -e "\e[01;32m Info: dhd \e[00m"
   HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=${DHD_REPO}"
@@ -85,8 +90,8 @@ sed -i "/begin 60_ssu/a ssu dr adaptation0" $KSFL
 cat $KSFL > a
 echo -e "\e[01;33m Info: 8.3  \e[00m"
 echo -e "\e[01;32m Info: create patterns \e[00m"
+[ -d hybris ] || mkdir -p hybris
 rpm/helpers/process_patterns.sh
-
 
 echo -e "\e[01;33m Info: 8.4  \e[00m"
 echo -e "\e[01;32m Info: create mic \e[00m"

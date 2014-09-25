@@ -21,29 +21,38 @@ chmod a+x ~/bin/repo
 export PATH=${PATH}:${HOME}/bin
 
 
-echo -e "\e[01;33m Info: 5.1  \e[00m"
-if [ ! -d $ANDROID_ROOT ]; then
-    mkdir -p $ANDROID_ROOT
-    cd $ANDROID_ROOT
-    repo init -u git://github.com/mer-hybris/android.git -b $BRANCH
-fi
-
-cd $ANDROID_ROOT
-
-echo -e "\e[01;32m Info: repo sync -c &> repo-sync.stdoe \e[00m"
-repo sync -c &> repo-sync.stdoe
-echo -e "\e[01;32m Info: done repo sync -c &> repo-sync.stdoe \e[00m"
-
-echo -e "\e[01;33m Info: 5.2  \e[00m"
-echo -e "\e[01;32m build env, cache and breackfast \e[00m"
-source build/envsetup.sh
-export USE_CCACHE=1
-breakfast $DEVICE
-rm -f .repo/local_manifests/roomservice.xml
-echo -e "\e[01;32m done \e[00m"
-
-
 if [ x"$DHD_REPO" == xx ]; then
+  echo -e "\e[01;33m Info: 5.1  \e[00m"
+  if [ ! -d $ANDROID_ROOT ]; then
+     mkdir -p $ANDROID_ROOT
+     cd $ANDROID_ROOT
+     repo init -u git://github.com/mer-hybris/android.git -b $BRANCH
+   fi
+
+  cd $ANDROID_ROOT
+
+  echo -e "\e[01;32m Info: repo sync -c &> repo-sync.stdoe \e[00m"
+  repo sync -c &> repo-sync.stdoe
+  echo -e "\e[01;32m Info: done repo sync -c &> repo-sync.stdoe \e[00m"
+
+  echo -e "\e[01;33m Info: 5.2  \e[00m"
+  echo -e "\e[01;32m build env, cache and breackfast \e[00m"
+  source build/envsetup.sh
+  export USE_CCACHE=1
+  breakfast $DEVICE
+  rm -f .repo/local_manifests/roomservice.xml
+  echo -e "\e[01;32m done \e[00m"
+
   echo -e "\e[01;32m Info: make -j$JOBS hybris-hal &> make-hybris-hal.stdoe \e[00m"
   make -j$JOBS hybris-hal &> make-hybris-hal.stdoe
+else 
+  echo -e "\e[01;33m Info: 5.1 version b \e[00m"
+  if [ ! -d $ANDROID_ROOT ]; then
+     mkdir -p $ANDROID_ROOT
+     cd $ANDROID_ROOT
+     git clone git://github.com/mer-hybris/droid-hal-device rpm
+  else
+     cd $ANDROID_ROOT/rpm
+     git pull
+  fi
 fi

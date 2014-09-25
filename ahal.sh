@@ -64,10 +64,16 @@ sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu lr
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper ref -f
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n install droid-hal-$DEVICE 
 echo -e "\e[01;33m Info: 7.1.4 \e[00m"
-echo -e "\e[01;32m Info: mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build &> droid-hal-configs.log \e[00m"
-mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build &> droid-hal-configs.log
-tail -n 5 droid-hal-configs.log
+if [ -x"$DHD_REPO" != xx ]; then
+   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n install ssu-kickstarts-droid
+else
+  echo -e "\e[01;32m Info: mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build &> droid-hal-configs.log \e[00m"
+  mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build &> droid-hal-configs.log
+  tail -n 5 droid-hal-configs.log
+fi
+
 # other middleware stuff only if no mw repo is specified
+
 if [ x"$MW_REPO" == xx ]; then
 
     echo -e "\e[01;33m Info: 8.1 \e[00m"
