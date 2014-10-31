@@ -16,8 +16,6 @@ mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE
 createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install zypper ref
 sb2 -t $VENDOR-$DEVICE-armv7hl ssu lr
-
-
 echo -e "\e[01;33m Info: 8.2  \e[00m"
 mkdir -p tmp
 KSFL=$ANDROID_ROOT/tmp/Jolla-@RELEASE@-$DEVICE-@ARCH@.ks
@@ -57,7 +55,7 @@ for pack in $PACKAGES_TO_ADD; do
   sed -i "/@Jolla\ Configuration\ $DEVICE/a $pack" $KSFL
 done
 
-PACKAGES_TO_REMOVE="feature-xt9 jolla-xt9-cp jolla-xt9 ofono-configs-mer ssu-vendor-data-example"
+PACKAGES_TO_REMOVE="feature-xt9 jolla-xt9-cp jolla-xt9 ofono-configs-mer ssu-vendor-data-example qtscenegraph-adaptation "
 for pack in $PACKAGES_TO_REMOVE; do 
   sed -i "/@Jolla\ Configuration\ $DEVICE/a -$pack" $KSFL
 done

@@ -17,7 +17,7 @@ mkdir -p $SFFE_SB2_TARGET
 
 
 TARGETS_URL=http://releases.sailfishos.org/sdk/latest/targets/targets.json
-TARBALL_URL=$(curl $TARGETS_URL | grep 'armv7hl.tar.bz2' | cut -d\" -f4)
+TARBALL_URL=$(curl $TARGETS_URL | grep 'armv7hl.tar.bz2' | tail -n 1 | cut -d\" -f4)
 TARBALL=$(basename $TARBALL_URL)
 [ -f $TARBALL ] || curl -O $TARBALL_URL
 [ -f ${TARBALL}.untarred ] || sudo tar --numeric-owner -pxjf $TARBALL -C $SFFE_SB2_TARGET
