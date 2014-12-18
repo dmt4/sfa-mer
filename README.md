@@ -40,7 +40,13 @@ The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 po
 
 ## Usage example
 ```bash
-./fullbuild.sh -mer-root nexus5 -android-root nexus5/droid -device hammerhead -vendor lge -extraname dmt -sfrelease 1.0.8.19 -jobs 8 -branch hybris-11.0 -dest nexus5
+last alpha4 for hammerhead
+./fullbuild.sh -mer-root /home/alin/lavello/NEXUS5/mer-dec-t1 -android-root
+/home/alin/lavello/NEXUS5/ubu-dec-t1 -branch hybris-11.0 -device hammerhead -vendor lge -dest
+/home/alin/lavello/nexus5 -sfrelease 1.1.0.39 -extraname alpha4 -jobs 4 -dhdrepo
+"http://repo.merproject.org/obs/nemo:/devel:/hw:/lge:/hammerhead/sailfish_1.1.0.38_armv7hl/" -mwrepo
+"http://repo.merproject.org/obs/nemo:/devel:/hw:/lge:/hammerhead/sailfish_1.1.0.38_armv7hl/"
+-extrarepo x -target update9
 ```
 
 
