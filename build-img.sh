@@ -22,8 +22,9 @@ KSFL=$ANDROID_ROOT/tmp/Jolla-@RELEASE@-$DEVICE-@ARCH@.ks
 
 echo -e "\e[01;32m Info: adaptation \e[00m"
 HA_REPO="repo --name=adaptation0-$DEVICE-@RELEASE@"
-if [ x"$DHD_REPO" != xx ]; then
+if [ x"$MW_REPO" != xx ]; then
    sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install cat /usr/share/kickstarts/Jolla-@RELEASE@-hammerhead-@ARCH@.ks > $KSFL
+   cat $KSFL
    sed -i -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" $KSFL
 else 
   sed -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" \
@@ -40,7 +41,7 @@ if [ x"$MW_REPO" != xx ]; then
     HA_REPO2="repo --name=mw-$DEVICE-@RELEASE@ --baseurl=${MW_REPO}"
     sed -i -e "/^$HA_REPO.*$/a$HA_REPO2" $KSFL
 fi
-if [ -n "$EXTRA_REPO" ]; then
+if [ x"$EXTRA_REPO" != xx ]; then
     echo -e "\e[01;32m Info: add mw repo \e[00m"
     HA_REPO3="repo --name=extra-$DEVICE-@RELEASE@ --baseurl=${EXTRA_REPO}"
     sed -i -e "/^$HA_REPO.*$/a$HA_REPO3" $KSFL
@@ -85,7 +86,6 @@ if [ x"$DHD_REPO" != xx ]; then
   sed -i "/begin 60_ssu/a ssu ar dhd $DHD_REPO" $KSFL
 fi
 sed -i "/begin 60_ssu/a ssu dr adaptation0" $KSFL
-cat $KSFL > a
 echo -e "\e[01;33m Info: 8.3  \e[00m"
 echo -e "\e[01;32m Info: create patterns \e[00m"
 [ -d hybris ] || mkdir -p hybris
@@ -98,6 +98,7 @@ echo -e "\e[01;32m Info: create mic \e[00m"
 #RELEASE=latest
 # WARNING: EXTRA_NAME currently does not support '.' dots in it!
 EXTRA_NAME=-${EXTRA_STRING}-$(date +%Y%m%d%H%M)
+cat $KSFL > ~/a
 sudo mic create fs --arch armv7hl \
   --tokenmap=ARCH:armv7hl,RELEASE:$RELEASE,EXTRA_NAME:$EXTRA_NAME \
   --record-pkgs=name,url \
