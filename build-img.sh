@@ -48,7 +48,7 @@ if [ x"$EXTRA_REPO" != xx ]; then
 fi
 
 echo -e "\e[01;32m Info: extra packages \e[00m"
-PACKAGES_TO_ADD="sailfish-office jolla-calculator jolla-email jolla-notes jolla-clock jolla-mediaplayer jolla-calendar jolla-fileman mce-plugin-libhybris usb-moded-pc-suite-mode-android usb-moded-mass-storage-android-config usb-moded-diag-mode-android usb-moded-developer-mode-android usb-moded-defaults-android usb-moded-connection-sharing-android-config usb-moded strace jolla-devicelock-plugin-encpartition sailfish-version"
+PACKAGES_TO_ADD="sailfish-office jolla-calculator jolla-email jolla-notes jolla-clock jolla-mediaplayer jolla-calendar jolla-fileman mce-plugin-libhybris usb-moded-pc-suite-mode-android usb-moded-mass-storage-android-config usb-moded-diag-mode-android usb-moded-developer-mode-android usb-moded-defaults-android usb-moded-connection-sharing-android-config usb-moded strace jolla-devicelock-plugin-encsfa sailfish-version"
 if [  x"$MW_REPO" != xx ]; then 
   PACKAGES_TO_ADD="$PACKAGES_TO_ADD gstreamer0.10-droidcamsrc gstreamer0.10-colorconv gstreamer0.10-droideglsink libgstreamer0.10-nativebuffer libgstreamer0.10-gralloc gstreamer0.10-omx gst-av"
 fi
@@ -56,7 +56,8 @@ for pack in $PACKAGES_TO_ADD; do
   sed -i "/@Jolla\ Configuration\ $DEVICE/a $pack" $KSFL
 done
 
-PACKAGES_TO_REMOVE="feature-xt9 jolla-xt9-cp jolla-xt9 ofono-configs-mer ssu-vendor-data-example qtscenegraph-adaptation "
+#PACKAGES_TO_REMOVE="ofono-configs-mer ssu-vendor-data-example qtscenegraph-adaptation "
+PACKAGES_TO_REMOVE="ofono-configs-mer ssu-vendor-data-example"
 for pack in $PACKAGES_TO_REMOVE; do 
   sed -i "/@Jolla\ Configuration\ $DEVICE/a -$pack" $KSFL
 done
@@ -79,13 +80,14 @@ echo -e "\e[01;33m Info: Add adaptation and extra repos in image  \e[00m"
 if [ x"$MW_REPO" != xx  ]; then
   sed -i "/begin 60_ssu/a ssu ar mw $MW_REPO" $KSFL
 fi
-if [ -n "$EXTRA_REPO" ]; then
+if [ x"$EXTRA_REPO" != xx ]; then
   sed -i "/begin 60_ssu/a ssu ar extra $EXTRA_REPO" $KSFL
 fi
 if [ x"$DHD_REPO" != xx ]; then
   sed -i "/begin 60_ssu/a ssu ar dhd $DHD_REPO" $KSFL
 fi
 sed -i "/begin 60_ssu/a ssu dr adaptation0" $KSFL
+sed -i "/end 70_sdk-domain/a sed -i -e 's|^adaptation=.*$|adaptation=http://repo.merproject.org/obs/nemo:/devel:/hw:/lge:/hammerhead/sailfish_1.1.0.38_armv7hl/|' /usr/share/ssu/repos.ini" $KSFL
 echo -e "\e[01;33m Info: 8.3  \e[00m"
 echo -e "\e[01;32m Info: create patterns \e[00m"
 [ -d hybris ] || mkdir -p hybris
@@ -114,7 +116,7 @@ echo -e "\e[01;32m Info: clean repos in target \e[00m"
 if [  x$MW_REPO != xx ] ; then 
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu rr mw-$DEVICE-hal
 fi
-if [  -n $EXTRA_REPO ] ; then 
+if [  x$EXTRA_REPO != xx ] ; then 
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu rr extra-$DEVICE
 fi
 if [  x$DHD_REPO != xx ] ; then 
