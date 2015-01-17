@@ -41,6 +41,7 @@ while (($#)); do
       -sfrelease x.y.z.p # release version of Sailfish OS against which the image is built
       -no-education      # do not show the lenghtly user tutorial on first boot
       -dest folder       # where to place to the image
+      -target name       # target against which to build update8 or update9
       -h displays this help\n"
     exit 0
   ;;
@@ -108,6 +109,11 @@ while (($#)); do
     shift
     DISABLE_TUTORIAL=1
   ;;
+  -target)
+    shift
+    TARGET=$1
+    shift
+  ;;
   *)
     echo "unknown option! Use -h for the list of options!"
     exit 0
@@ -133,6 +139,7 @@ test -n "$DHD_REPO"          && echo "  DHD_REPO=$DHD_REPO          "
 test -n "$MW_REPO"       && echo "  MW_REPO=$MW_REPO          "
 test -n "$EXTRA_REPO"       && echo "  EXTRA_REPO=$EXTRA_REPO          "
 test -n "$DISABLE_TUTORIAL" && echo "  DISABLE_TUTORIAL=$DISABLE_TUTORIAL "
+test -n "$TARGET"       && echo "  TARGET=$TARGET          "
 
 
 [ -f ~/.hadk.env ] && source ~/.hadk.env
@@ -157,6 +164,7 @@ export DISABLE_TUTORIAL=\${DISABLE_TUTORIAL:-$DISABLE_TUTORIAL}
 export DHD_REPO=\${DHD_REPO:-$DHD_REPO}
 export MW_REPO=\${MW_REPO:-$MW_REPO}
 export EXTRA_REPO=\${EXTRA_REPO:-$EXTRA_REPO}
+export TARGET=\${TARGET:-$TARGET}
 
 
 # printf \"vars in use:

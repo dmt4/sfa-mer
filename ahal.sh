@@ -65,7 +65,7 @@ sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu lr
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper ref -f
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n install droid-hal-$DEVICE 
 echo -e "\e[01;33m Info: 7.1.4 \e[00m"
-if [ x"$DHD_REPO" != xx ]; then
+if [ x"$MW_REPO" != xx ]; then
    sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n install ssu-kickstarts-droid
 else
   echo -e "\e[01;32m Info: mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build &> droid-hal-configs.log \e[00m"
@@ -271,7 +271,8 @@ if [ x"$MW_REPO" == xx ]; then
     createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install zypper ref
    
-        PKG=qtscenegraph-adaptation
+ if [ x$TARGET == "xupdate10" ] ; then 
+    PKG=qtscenegraph-adaptation
     echo -e "\e[01;32m Info: build $PKG\e[00m"
     SPEC=${PKG}-droid
     cd $MER_ROOT/devel/mer-hybris
@@ -292,6 +293,6 @@ if [ x"$MW_REPO" == xx ]; then
     mv RPMS/*.rpm $ANDROID_ROOT/droid-local-repo/$DEVICE/$PKG
     createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install zypper ref
-
+fi
 
 fi

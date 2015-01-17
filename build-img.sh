@@ -87,7 +87,7 @@ if [ x"$DHD_REPO" != xx ]; then
   sed -i "/begin 60_ssu/a ssu ar dhd $DHD_REPO" $KSFL
 fi
 sed -i "/begin 60_ssu/a ssu dr adaptation0" $KSFL
-sed -i "/end 70_sdk-domain/a sed -i -e 's|^adaptation=.*$|adaptation=http://repo.merproject.org/obs/nemo:/devel:/hw:/lge:/hammerhead/sailfish_1.1.0.38_armv7hl/|' /usr/share/ssu/repos.ini" $KSFL
+#sed -i "/end 70_sdk-domain/a sed -i -e 's|^adaptation=.*$|adaptation=http://repo.merproject.org/obs/nemo:/devel:/hw:/lge:/hammerhead/sailfish_1.1.0.38_armv7hl/|' /usr/share/ssu/repos.ini" $KSFL
 echo -e "\e[01;33m Info: 8.3  \e[00m"
 echo -e "\e[01;32m Info: create patterns \e[00m"
 [ -d hybris ] || mkdir -p hybris

@@ -14,11 +14,13 @@ cd $MER_ROOT
 
 SFFE_SB2_TARGET=$MER_ROOT/targets/$VENDOR-$DEVICE-armv7hl
 mkdir -p $SFFE_SB2_TARGET
-
+[ -n "$TARGET" ] || TARGET=update8
 
 TARGETS_URL=http://releases.sailfishos.org/sdk/latest/targets/targets.json
-TARBALL_URL=$(curl $TARGETS_URL | grep 'armv7hl.tar.bz2' | tail -n 1 | cut -d\" -f4)
+TARBALL_URL=$(curl $TARGETS_URL | grep 'armv7hl.tar.bz2' | grep $TARGET | cut -d\" -f4)
 TARBALL=$(basename $TARBALL_URL)
+echo -e "\e[01;32m Info: getting TARBALL=$TARBALL \e[00m"
+
 [ -f $TARBALL ] || curl -O $TARBALL_URL
 [ -f ${TARBALL}.untarred ] || sudo tar --numeric-owner -pxjf $TARBALL -C $SFFE_SB2_TARGET
 [ -f ${TARBALL}.untarred ] || mv ~/.scratchbox2{,-$(date +%d-%m-%Y.%H-%M-%S)}
