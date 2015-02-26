@@ -76,6 +76,8 @@ if [ -n "$DISABLE_TUTORIAL" ]; then
 fi
 echo -e "\e[01;33m Info: Add adaptation and extra repos in image  \e[00m"
 
+sed -i '/%post --nochroot/a cp $INSTALL_ROOT'//etc//sailfish-release' $IMG_OUT_DIR' $KSFL
+sed -i 's|/etc/sailfish-release||' $KSFL
 
 if [ x"$MW_REPO" != xx  ]; then
   sed -i "/begin 60_ssu/a ssu ar mw $MW_REPO" $KSFL
