@@ -34,17 +34,35 @@ if [ x"$DHD_REPO" == xx ]; then
   echo -e "\e[01;32m Info: repo sync -c &> repo-sync.stdoe \e[00m"
   repo sync -c &> repo-sync.stdoe
   echo -e "\e[01;32m Info: done repo sync -c &> repo-sync.stdoe \e[00m"
-
   echo -e "\e[01;33m Info: 5.2  \e[00m"
   echo -e "\e[01;32m build env, cache and breackfast \e[00m"
+  ls .repo/local_manifests/roomservice.xml
+  rm -f .repo/local_manifests/roomservice.xml
+  pushd ./device/lge/hammerhead
+    git checkout cm.dependencies 
+  popd  
+  sed -i -n '/kernel/{N;s/.*//;x;d;};x;p;${x;p;}' ./device/lge/hammerhead/cm.dependencies  
+  sed -i "/},$/d" ./device/lge/hammerhead/cm.dependencies 
+  sed -i "/^$/d"  ./device/lge/hammerhead/cm.dependencies
   source build/envsetup.sh
   export USE_CCACHE=1
   breakfast $DEVICE
+
+  ls .repo/local_manifests/roomservice.xml
   rm -f .repo/local_manifests/roomservice.xml
   echo -e "\e[01;32m done \e[00m"
-
+  cp /home/alin/hackmanifest.xml .repo/local_manifests/manifest.xml
+  sed -i "/_lge_hammerhead/d" .repo/manifests/default.xml
   echo -e "\e[01;32m Info: make -j$JOBS hybris-hal &> make-hybris-hal.stdoe \e[00m"
   make -j$JOBS hybris-hal &> make-hybris-hal.stdoe
+#  rm -rf bionic
+#  git clone https://github.com/mer-hybris/android_bionic/ bionic
+  pushd bionic
+#  git checkout hybris-11.0-44S
+  git cherry-pick 40eb3772fecf40bf89d70b30f57fb0e074301d3a
+  popd 
+  make libc_common &> make-libc_common.stdoe
+  make libc &> make-libc.stdoe
 else 
   echo -e "\e[01;33m Info: 5.1 version b \e[00m"
   if [ ! -d $ANDROID_ROOT ]; then

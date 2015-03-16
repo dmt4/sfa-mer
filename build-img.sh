@@ -50,7 +50,7 @@ fi
 echo -e "\e[01;32m Info: extra packages \e[00m"
 PACKAGES_TO_ADD="sailfish-office jolla-calculator jolla-email jolla-notes jolla-clock jolla-mediaplayer jolla-calendar jolla-fileman mce-plugin-libhybris usb-moded-pc-suite-mode-android usb-moded-mass-storage-android-config usb-moded-diag-mode-android usb-moded-developer-mode-android usb-moded-defaults-android usb-moded-connection-sharing-android-config usb-moded strace jolla-devicelock-plugin-encsfa sailfish-version"
 if [  x"$MW_REPO" != xx ]; then 
-  PACKAGES_TO_ADD="$PACKAGES_TO_ADD gstreamer0.10-droidcamsrc gstreamer0.10-colorconv gstreamer0.10-droideglsink libgstreamer0.10-nativebuffer libgstreamer0.10-gralloc gstreamer0.10-omx gst-av"
+  PACKAGES_TO_ADD="$PACKAGES_TO_ADD gstreamer0.10-droidcamsrc gstreamer0.10-colorconv gstreamer0.10-droideglsink libgstreamer0.10-nativebuffer libgstreamer0.10-gralloc gstreamer0.10-omx"
 fi
 for pack in $PACKAGES_TO_ADD; do 
   sed -i "/@Jolla\ Configuration\ $DEVICE/a $pack" $KSFL
@@ -62,7 +62,7 @@ for pack in $PACKAGES_TO_REMOVE; do
   sed -i "/@Jolla\ Configuration\ $DEVICE/a -$pack" $KSFL
 done
 #  sed -i "s;@Jolla\ Configuration\ $DEVICE;@jolla-hw-adaptation-$DEVICE;g" $KSFL
-
+cat $KSFL > ~/a.ks
 if [ -n "$DISABLE_TUTORIAL" ]; then
 #Beware the order of these commands is reversed in $KSFL
   echo -e "\e[01;32m Info: disable tutorials \e[00m"

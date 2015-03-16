@@ -21,9 +21,9 @@ cd $ANDROID_ROOT
 echo -e "\e[01;33m Info: bad workaround shall be removed asap \e[00m"
 echo -e "\e[01;33m Info: sudo rpm -U http://repo.merproject.org/obs/mer-tools:/testing/latest_i486/noarch/sdk-utils-0.65-1.19.1.noarch \e[00m"
 #sudo rpm -U http://repo.merproject.org/obs/mer-tools:/testing/latest_i486/noarch/sdk-utils-0.65-1.19.1.noarch
-sudo rpm -U http://repo.merproject.org/obs/mer-tools:/testing/latest_i486/noarch/sdk-utils-0.66-1.22.1.noarch.rpm 
+#sudo rpm -U http://repo.merproject.org/obs/mer-tools:/testing/latest_i486/noarch/sdk-utils-0.66-1.22.1.noarch.rpm 
 echo -e "\e[01;33m Info: 7.1.1 \e[00m"
-if [  -n $EXTRA_REPO ] ; then 
+if [  x$EXTRA_REPO  != xx ] ; then 
   echo -e "\e[01;32m Info: Add remote extra repo\e[00m"
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar extra-$DEVICE $EXTRA_REPO
 fi
@@ -31,6 +31,10 @@ if [  x$MW_REPO != xx ] ; then
   echo -e "\e[01;32m Info: Add remote mw repo\e[00m"
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar mw-$DEVICE-hal $MW_REPO
 fi
+
+.repo/repo/repo manifest -r -o tmp/manifest.xml
+mv tmp/manifest.xml repo_service_manifest.xml
+sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper dup
 if [ x"$DHD_REPO" == xx ]; then
   echo -e "\e[01;33m Info: bad workaround shall be removed asap \e[00m"
   echo -e "\e[01;33m Info: sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper in qt5-qttools-kmap2qmap repomd-pattern-builder cmake \e[00m"
@@ -135,18 +139,19 @@ if [ x"$MW_REPO" == xx ]; then
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install zypper ref
 
 
-    PKG=sensorfw
+    PKG=qtsensors
     echo -e "\e[01;32m Info: build $PKG\e[00m"
-    SPEC=sensorfw-qt5-hybris
-    OTHER_RANDOM_NAME=hybris-libsensorfw-qt5
-    cd $MER_ROOT/devel/mer-hybris
+    SPEC=qtsensors
+    OTHER_RANDOM_NAME=qtsensors
+    mkdir -p $MER_ROOT/devel/mer-packages
+    cd $MER_ROOT/devel/mer-packages
     if [ -d $PKG ] ; then
       echo -e "\e[01;32m Info: update the git $PKG\e[00m"
       cd $PKG
       git pull
     else
       echo -e "\e[01;32m Info: clone the git $PKG\e[00m"
-      git clone https://github.com/mer-hybris/$PKG.git
+      git clone https://github.com/mer-packages/$PKG.git
       cd $PKG
     fi
     echo -e "\e[01;32m Info: mb2 -s rpm/$SPEC.spec -t $VENDOR-$DEVICE-armv7hl build &> $PKG.log \e[00m"
@@ -271,7 +276,7 @@ if [ x"$MW_REPO" == xx ]; then
     createrepo $ANDROID_ROOT/droid-local-repo/$DEVICE
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install zypper ref
    
- if [ x$TARGET == "xupdate10" ] ; then 
+ if [ x$TARGET == "xupdate11" ] ; then 
     PKG=qtscenegraph-adaptation
     echo -e "\e[01;32m Info: build $PKG\e[00m"
     SPEC=${PKG}-droid
