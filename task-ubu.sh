@@ -58,6 +58,7 @@ if [ x"$DHD_REPO" == xx ]; then
 #  rm -rf bionic
 #  git clone https://github.com/mer-hybris/android_bionic/ bionic
   pushd bionic
+  # Cherry-pick N5 sensors hack; needs to be cherry-picked to prevent build issues
 #  git checkout hybris-11.0-44S
   git cherry-pick 40eb3772fecf40bf89d70b30f57fb0e074301d3a
   popd 
