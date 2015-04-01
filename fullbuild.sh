@@ -1,4 +1,6 @@
 #!/bin/bash
+TOOLDIR="$(dirname `which $0`)"
+source "$TOOLDIR/utility-functions.inc"
 
 # The main script.
 # Resets the environment, updates the Mer SDK is necessary and passes on the task to the chroot.
@@ -41,7 +43,7 @@ while (($#)); do
       -sfrelease x.y.z.p # release version of Sailfish OS against which the image is built
       -no-education      # do not show the lenghtly user tutorial on first boot
       -dest folder       # where to place to the image
-      -target name       # target against which to build update8 or update9
+      -target name       # target against which to build (empty for latest)
       -h displays this help\n"
     exit 0
   ;;
@@ -143,7 +145,8 @@ test -n "$TARGET"       && echo "  TARGET=$TARGET          "
 
 
 [ -f ~/.hadk.env ] && source ~/.hadk.env
-source $(dirname $0)/hadk.env
+# pre-defined DHD_REPO and MW_REPO prevents local build!
+#source ${TOOLDIR}/hadk.env
 
 printf "
 export VENDOR=\${VENDOR:-$VENDOR}
@@ -191,10 +194,10 @@ export TARGET=\${TARGET:-$TARGET}
 
 # echo $0
 
-echo -e "\e[01;33m Info: 4.1  \e[00m"
-cp $(dirname $0)/profile-mer ~/.mersdk.profile
-cp $(dirname $0)/profile-ubu ~/.mersdkubu.profile
+mchapter "4.1"
+cp ${TOOLDIR}/profile-mer ~/.mersdk.profile
+cp ${TOOLDIR}/profile-ubu ~/.mersdkubu.profile
 
-$(dirname $0)/setup-mer.sh
-$(dirname $0)/exec-mer.sh $(dirname $0)/task-mer.sh
+${TOOLDIR}/setup-mer.sh || die
+${TOOLDIR}/exec-mer.sh ${TOOLDIR}/task-mer.sh
 

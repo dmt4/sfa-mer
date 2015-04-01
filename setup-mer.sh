@@ -1,19 +1,21 @@
 #!/bin/bash
-
+TOOLDIR="$(dirname `which $0`)"
+source "$TOOLDIR/utility-functions.inc"
 # Download and untar appropriately the Mer SDK. Also try to avoid repetition.
 
 source ~/.hadk.env
 
 mkdir -p ${MER_ROOT}/sdks/sdk
 
-echo -e "\e[01;33m Info: 4.2  \e[00m"
+mchapter "4.2"
 cd $MER_ROOT
-echo -e "\e[01;32m Info: setup mer \e[00m"
+minfo "setup mer"
 TARBALL=mer-i486-latest-sdk-rolling-chroot-armv7hl-sb2.tar.bz2
-[ -f $TARBALL  ] || curl -k -O https://img.merproject.org/images/mer-sdk/$TARBALL
-echo -e "\e[01;32m Info: untar mer \e[00m"
-[ -f ${TARBALL}.untarred ] || sudo tar --numeric-owner -p -xjf ${MER_ROOT}/$TARBALL -C ${MER_ROOT}/sdks/sdk
+[ -f $TARBALL  ] || curl -k -O https://img.merproject.org/images/mer-sdk/$TARBALL || die
+
+minfo "untar mer"
+[ -f ${TARBALL}.untarred ] || sudo tar --numeric-owner -p -xjf ${MER_ROOT}/$TARBALL -C ${MER_ROOT}/sdks/sdk || die
 touch ${TARBALL}.untarred
-echo -e "\e[01;32m Info: done mer \e[00m"
+minfo "done mer"
 
 
