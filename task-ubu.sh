@@ -15,7 +15,8 @@ source ~/.hadk.env
 [ -z "$MERSDKUBU" ] && exit 0
 
 # install software in chroot
-#sudo apt-get install -y unzip bsdmainutils
+minfo "install additional tools for ubuntu chroot"
+sudo apt-get install -y unzip bsdmainutils
 
 mkdir -p ~/bin
 [ -f ~/bin/repo ] || curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
@@ -77,14 +78,18 @@ if [ -z "$DHD_REPO" ]; then
   ######################################
   mtodo "Find better solution:"
   minfo "Work-around for build error due to missing bouncycastle concerning dumpkey"
+  minfo "  make -j$JOBS bouncycastle-host dumpkey &> make-dumpkey.stdoe"
   make -j$JOBS bouncycastle-host dumpkey &> make-dumpkey.stdoe || die_with_log make-dumpkey.stdoe
-  OUTDIR="out/target/product/$DEVICE/obj/PACKAGING/ota_keys_intermediates"
-  BC="$(find out/host/ -name 'bouncycastle-host.jar' | tail -n1)"
-  DC="$(find out/host/ -name 'dumpkey.jar' | tail -n1)"
-  mkdir -p "${OUTDIR}"
-  minfo "injecting key to ${OUTDIR}"
-  java  -cp "${BC}:${DC}" com.android.dumpkey.DumpPublicKey build/target/product/security/testkey.x509.pem build/target/product/security/cm.x509.pem build/target/product/security/cm-devkey.x509.pem build/target/product/security/bacon.x509.pem  > ${OUTDIR}/key
-  unset OUTDIR
+  TMPDIR=`mktemp -d`
+  BC="`pwd`/$(find out/host/ -name 'bouncycastle-host.jar' | tail -n1)" 
+  DC="`pwd`/$(find out/host/ -name 'dumpkey.jar' | tail -n1)"
+  pushd ${TMPDIR} &> /dev/null 
+  unzip -oq "$BC" || die "can't unzip file $BC"
+  unzip -oq "$DC" || die "can't unzip file $DC"
+  zip -rq "$DC" . || die "can't rezip $DC"
+  popd &> /dev/null
+  rm -Rf "${TMPDIR}"
+  unset TMPDIR
   unset BC
   unset DC
   ######################################
