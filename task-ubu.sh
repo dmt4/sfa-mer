@@ -106,6 +106,13 @@ if [ -z "$DHD_REPO" ]; then
   minfo "redoing bionic"
   make libc_common &> make-libc_common.stdoe || die_with_log make-libc_common.stdoe
   make libc &> make-libc.stdoe || die_with_log make-libc.stdoe
+
+  CREDITS="$TOOLDIR/device/$VENDOR/$DEVICE-hal-build-credits.inc"
+  if [ -f ${CREDITS} ]; then
+     # call additional make targets from here or whatever you need
+     minfo "sourcing \"credits\" build script."
+     source ${CREDITS}
+  fi
 else  # DHD_REPO"
   mchapter "5.1 version b"
   if [ ! -d $ANDROID_ROOT ]; then
