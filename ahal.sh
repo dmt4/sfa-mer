@@ -74,7 +74,7 @@ EOF
       rpm/helpers/add_new_device.sh || die
   fi
 
-  if [ ! -d "rpm/device-$VENDOR-$DEVICE-configs" ]; then
+  if [ ! -d "rpm/device-$VENDOR-$DEVICE-configs/var/lib/environment" ]; then
       mchapter "14.4.2"
       mwarn "There is no device specific config, creating minimal one"
       COMPOSITOR_CFGS=rpm/device-$VENDOR-$DEVICE-configs/var/lib/environment/compositor
