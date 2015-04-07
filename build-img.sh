@@ -83,13 +83,13 @@ mchapter "Add adaptation and extra repos in image"
 sed -i '/%post --nochroot/a cp $INSTALL_ROOT'//etc//sailfish-release' $IMG_OUT_DIR' $KSFL
 sed -i 's|/etc/sailfish-release||' $KSFL
 
-if [ ! -z "$MW_REPO"  ]; then
+if repo_is_set "$MW_REPO"; then
   sed -i "/begin 60_ssu/a ssu ar mw $MW_REPO" $KSFL
 fi
-if [ ! -z "$EXTRA_REPO"  ]; then
+if repo_is_set "$EXTRA_REPO"; then
   sed -i "/begin 60_ssu/a ssu ar extra $EXTRA_REPO" $KSFL
 fi
-if [ ! -z "$DHD_REPO"  ]; then
+if repo_is_set "$DHD_REPO"; then
   sed -i "/begin 60_ssu/a ssu ar dhd $DHD_REPO" $KSFL
 fi
 sed -i "/begin 60_ssu/a ssu dr adaptation0" $KSFL
