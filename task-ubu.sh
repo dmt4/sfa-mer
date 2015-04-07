@@ -98,15 +98,6 @@ if repo_is_unset "$DHD_REPO"; then
 
   make -j$JOBS hybris-hal &> make-hybris-hal.stdoe || die_with_log make-hybris-hal.stdoe
 
-  pushd bionic
-  # Cherry-pick N5 sensors hack; needs to be cherry-picked to prevent build issues
-  git cherry-pick 40eb3772fecf40bf89d70b30f57fb0e074301d3a
-  popd 
-
-  minfo "redoing bionic"
-  make libc_common &> make-libc_common.stdoe || die_with_log make-libc_common.stdoe
-  make libc &> make-libc.stdoe || die_with_log make-libc.stdoe
-
   CREDITS="$TOOLDIR/device/$VENDOR/$DEVICE-hal-build-credits.inc"
   if [ -f ${CREDITS} ]; then
      # call additional make targets from here or whatever you need
