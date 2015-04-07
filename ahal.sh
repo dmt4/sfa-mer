@@ -23,7 +23,7 @@ cd $ANDROID_ROOT
 mchapter "7.1.1"
 
 minfo "updating mer sdk"
-sudo zypper ref -f ; sudo zypper dup
+sudo zypper ref -f ; sudo zypper -n dup
 
 if repo_is_set "$EXTRA_REPO"; then
   minfo "Add remote extra repo"
@@ -40,11 +40,11 @@ mkdir -p tmp
 mv tmp/manifest.xml repo_service_manifest.xml
 
 minfo "Upgrading repository"
-sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper dup || die "upgrading failed"
+sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n dup || die "upgrading failed"
 if repo_is_unset "$DHD_REPO"; then
   mtodo "bad workaround shall be removed asap"
   minfo "sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper in qt5-qttools-kmap2qmap repomd-pattern-builder cmake "
-  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper in qt5-qttools-kmap2qmap repomd-pattern-builder cmake
+  sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n in qt5-qttools-kmap2qmap repomd-pattern-builder cmake
 
   if [ ! -f rpm/droid-hal-$DEVICE.spec ]; then
      OUR_DEVICE_HAL_SPEC="$TOOLDIR/device/$VENDOR/droid-hal-$DEVICE.spec"
@@ -151,7 +151,7 @@ if repo_is_unset "$MW_REPO"; then
 
     ${TOOLDIR}/pkgbuild.sh libhybris || die
     
-    sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-build zypper rm mesa-llvmpipe
+    sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-build zypper -n rm mesa-llvmpipe
 
     ${TOOLDIR}/pkgbuild.sh qt5-qpa-hwcomposer-plugin || die
     ${TOOLDIR}/pkgbuild.sh "https://github.com/mer-packages/qtsensors.git" || die
