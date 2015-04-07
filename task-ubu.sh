@@ -11,7 +11,7 @@ source "$TOOLDIR/utility-functions.inc"
 
 source ~/.hadk.env
 
-[ -z "$MERSDKUBU" ] && "$TOOLDIR"/exec-mer.sh ubu-chroot -r ${MER_ROOT}/sdks/ubuntu $0
+[ -z "$MERSDKUBU" ] && "$TOOLDIR"/exec-mer.sh ubu-chroot -r "$MER_ROOT/sdks/ubuntu" $0
 [ -z "$MERSDKUBU" ] && exit 0
 
 # install software in chroot
@@ -28,13 +28,13 @@ export PATH=${PATH}:${HOME}/bin
 
 if repo_is_unset "$DHD_REPO"; then
   mchapter "5.1"
-  if [ ! -d $ANDROID_ROOT ]; then
-     mkdir -p $ANDROID_ROOT
-     cd $ANDROID_ROOT
+  if [ ! - "$ANDROID_ROOT/.repo/manifest.xml" ]; then
+     mkdir -p "$ANDROID_ROOT"
+     cd "$ANDROID_ROOT"
      repo init -u git://github.com/mer-hybris/android.git -b $BRANCH || die
    fi
 
-  cd $ANDROID_ROOT
+  cd "$ANDROID_ROOT"
 
   DEVICE_CONFIG="$TOOLDIR/device/$VENDOR/$DEVICE.xml"
   if [ -f $DEVICE_CONFIG ]; then
@@ -115,12 +115,12 @@ if repo_is_unset "$DHD_REPO"; then
   fi
 else  # DHD_REPO"
   mchapter "5.1 version b"
-  if [ ! -d $ANDROID_ROOT ]; then
-     mkdir -p $ANDROID_ROOT
-     cd $ANDROID_ROOT
+  if [ ! -d "$ANDROID_ROOT" ]; then
+     mkdir -p "$ANDROID_ROOT"
+     cd "$ANDROID_ROOT"
      git clone git://github.com/mer-hybris/droid-hal-device rpm || die
   else
-     cd $ANDROID_ROOT/rpm
+     cd "$ANDROID_ROOT"/rpm
      git pull
   fi
 fi

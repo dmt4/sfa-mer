@@ -8,13 +8,13 @@ source "$TOOLDIR/utility-functions.inc"
 
 
 function dabspath {
-    pushd $1 > /dev/null && echo `pwd` && popd > /dev/null
+    pushd "$1" > /dev/null && echo `pwd` && popd > /dev/null
 }
 
 
 function mdabspath {
-    mkdir -p $1
-    dabspath $1
+    mkdir -p "$1"
+    dabspath "$1"
     rmdir --ignore-fail-on-non-empty $1
 }
 
@@ -152,25 +152,25 @@ minfo "including default values from $EXTRA_HADK_ENV, if existent"
 unset EXTRA_HADK_ENV
 
 printf "
-export VENDOR=\${VENDOR:-$VENDOR}
-export DEVICE=\${DEVICE:-$DEVICE}
+export VENDOR=\"\${VENDOR:-$VENDOR}\"
+export DEVICE=\"\${DEVICE:-$DEVICE}\"
 
-export MER_ROOT=\${MER_ROOT:-$MER_ROOT}
-export ANDROID_ROOT=\${ANDROID_ROOT:-$ANDROID_ROOT}
-export IMGDEST=\${IMGDEST:-$IMGDEST}
+export MER_ROOT=\"\${MER_ROOT:-$MER_ROOT}\"
+export ANDROID_ROOT=\"\${ANDROID_ROOT:-$ANDROID_ROOT}\"
+export IMGDEST=\"\${IMGDEST:-$IMGDEST}\"
 
 # always aim for the latest:
-export RELEASE=\${RELEASE:-$RELEASE}
-export EXTRA_STRING=\${EXTRA_STRING:-$EXTRA_STRING}
+export RELEASE=\"\${RELEASE:-$RELEASE}\"
+export EXTRA_STRING=\"\${EXTRA_STRING:-$EXTRA_STRING}\"
 
-export BRANCH=\${BRANCH:-$BRANCH}
-export JOBS=\${JOBS:-$JOBS}
+export BRANCH=\"\${BRANCH:-$BRANCH}\"
+export JOBS=\"\${JOBS:-$JOBS}\"
 
-export DISABLE_TUTORIAL=\${DISABLE_TUTORIAL:-$DISABLE_TUTORIAL}
-export DHD_REPO=\${DHD_REPO:-$DHD_REPO}
-export MW_REPO=\${MW_REPO:-$MW_REPO}
-export EXTRA_REPO=\${EXTRA_REPO:-$EXTRA_REPO}
-export TARGET=\${TARGET:-$TARGET}
+export DISABLE_TUTORIAL=\"\${DISABLE_TUTORIAL:-$DISABLE_TUTORIAL}\"
+export DHD_REPO=\"\${DHD_REPO:-$DHD_REPO}\"
+export MW_REPO=\"\${MW_REPO:-$MW_REPO}\"
+export EXTRA_REPO=\"\${EXTRA_REPO:-$EXTRA_REPO}\"
+export TARGET=\"\${TARGET:-$TARGET}\"
 
 
 # printf \"vars in use:

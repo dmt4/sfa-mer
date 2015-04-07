@@ -11,5 +11,5 @@ source "$TOOLDIR/utility-functions.inc"
 source ~/.hadk.env
 
 minfo "Chrooting to mer"
-${MER_ROOT}/sdks/sdk/mer-sdk-chroot $*
+"$MER_ROOT/sdks/sdk/mer-sdk-chroot" $*
 minfo "left mer chroot"

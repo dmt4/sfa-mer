@@ -114,8 +114,8 @@ sudo mic create fs --arch armv7hl \
   --pack-to=sfa-$DEVICE-$RELEASE$EXTRA_NAME.tar.bz2 \
   $KSFL 2>&1 | tee mic.log  || die
 minfo "Info: copy image"
-mkdir -p ${IMGDEST} || die
-cp -av sfa-${DEVICE}-${RELEASE}${EXTRA_NAME}/sailfishos-${DEVICE}-release-${RELEASE}${EXTRA_NAME}.zip ${IMGDEST}/ || die
+mkdir -p "$IMGDEST" || die
+cp -av sfa-${DEVICE}-${RELEASE}${EXTRA_NAME}/sailfishos-${DEVICE}-release-${RELEASE}${EXTRA_NAME}.zip "$IMGDEST"/ || die
 
 #clean repos in target
 minfo "Info: clean repos in target"

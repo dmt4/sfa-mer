@@ -12,12 +12,12 @@ source "$TOOLDIR/utility-functions.inc"
 source ~/.hadk.env
 
 minfo "sb2 setup"
-cd $MER_ROOT
+cd "$MER_ROOT"
 
-SFFE_SB2_TARGET=$MER_ROOT/targets/$VENDOR-$DEVICE-armv7hl
+SFFE_SB2_TARGET="$MER_ROOT/targets/$VENDOR-$DEVICE-armv7hl"
 
-if [ -d ${SFFE_SB2_TARGET} ]; then
-   minfo "SB2_TARGET ${SFFE_SB2_TARGET} exists, skipping creation"
+if [ -d "$SFFE_SB2_TARGET" ]; then
+   minfo "SB2_TARGET $SFFE_SB2_TARGET exists, skipping creation"
    exit 0
 fi
 
@@ -62,8 +62,8 @@ if [ ! x"$(sb2-config -l)" = x"$VENDOR-$DEVICE-armv7hl" ] ; then
     sb2 -t $VENDOR-$DEVICE-armv7hl -m sdk-install -R zypper ref --force || die
 fi
 
-mkdir -p $MER_ROOT/tmp
-cd $MER_ROOT/tmp
+mkdir -p "$MER_ROOT/tmp"
+cd "$MER_ROOT/tmp"
 
 minfo "testing newly installed tools"
 cat > main.c << EOF
