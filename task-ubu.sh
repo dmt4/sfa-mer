@@ -26,7 +26,7 @@ chmod a+x ~/bin/repo
 export PATH=${PATH}:${HOME}/bin
 
 
-if [ -z "$DHD_REPO" ]; then
+if repo_is_unset "$DHD_REPO"; then
   mchapter "5.1"
   if [ ! -d $ANDROID_ROOT ]; then
      mkdir -p $ANDROID_ROOT

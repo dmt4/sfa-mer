@@ -25,12 +25,12 @@ mchapter "7.1.1"
 minfo "updating mer sdk"
 sudo zypper ref -f ; sudo zypper dup
 
-if [  ! -z "$EXTRA_REPO" ] ; then
-  minfo "Info: Add remote extra repo"
+if repo_is_set "$EXTRA_REPO"; then
+  minfo "Add remote extra repo"
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar extra-$DEVICE $EXTRA_REPO
 fi
-if [  ! -z "$MW_REPO" ] ; then
-  minfo "Info: Add remote mw repo"
+if repo_is_set "$MW_REPO"; then
+  minfo "Add remote mw repo"
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu ar mw-$DEVICE-hal $MW_REPO
 fi
 
@@ -41,7 +41,7 @@ mv tmp/manifest.xml repo_service_manifest.xml
 
 minfo "Upgrading repository"
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper dup || die "upgrading failed"
-if [ -z "$DHD_REPO" ]; then
+if repo_is_unset "$DHD_REPO"; then
   mtodo "bad workaround shall be removed asap"
   minfo "sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper in qt5-qttools-kmap2qmap repomd-pattern-builder cmake "
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper in qt5-qttools-kmap2qmap repomd-pattern-builder cmake
@@ -103,7 +103,7 @@ mkdir -p $ANDROID_ROOT/droid-local-repo/$DEVICE
 rm -f $ANDROID_ROOT/droid-local-repo/$DEVICE/droid-hal-*rpm
 
 
-if [ ! -z "$DHD_REPO"  ]; then
+if repo_is_set "$DHD_REPO"; then
   minfo "Getting dhd rpms from repo"
   patternrpm=$(sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper se -s $DEVICE-patterns | tail -n 1 | awk '{print $2"-"$6"."$8".rpm" }')
   pushd $ANDROID_ROOT/droid-local-repo/$DEVICE ; curl -O $DHD_REPO/armv7hl/$patternrpm  ; ls;popd
@@ -125,16 +125,17 @@ sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n install droid-hal-$DE
 
 
 mchapter "7.1.4"
-if [ -z "$MW_REPO" ]; then
+if repo_is_unset "$MW_REPO"; then
   minfo "mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build &> droid-hal-configs.log "
   mb2 -t $VENDOR-$DEVICE-armv7hl -s hybris/droid-hal-configs/rpm/droid-hal-configs.spec build &> $ANDROID_ROOT/droid-hal-configs.log ||  die_with_log $ANDROID_ROOT/droid-hal-configs.log
 else
+  minfo "installing prebuilt hal from middleware repo..."
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install zypper -n install ssu-kickstarts-droid || die
 fi
 
 # other middleware stuff only if no mw repo is specified
 
-if [ -z "$MW_REPO" ]; then
+if repo_is_unset "$MW_REPO"; then
 
     mchapter "8.1 "
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-install ssu domain sales

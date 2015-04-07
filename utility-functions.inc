@@ -36,3 +36,11 @@ function die_with_log {
     die $*
 }
 
+function repo_is_set {
+    if [ -z "$1" ] || [ "$1" = "x" ]; then return 1; else return 0; fi
+}
+
+function repo_is_unset {
+  if [ ! -z "$1" ] && [ "$1" != "x" ]; then return 1; else return 0; fi
+}
+

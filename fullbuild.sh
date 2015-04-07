@@ -35,9 +35,9 @@ while (($#)); do
       -vendor vendorName # vendor name
       -device deviceName # device name
       -branch branchName # branch name from mer hybris
-      -dhdrepo repo-uri  # dhd repo to be used if recompiling locally is to be avoided
-      -mwrepo repo-uri   # middleware repo to be used if recompiling locally is to be avoided
-      -extrarepo repo-uri # extra repo to be used if you want to pass extra packages
+      -dhdrepo repo-uri  # dhd repo to be used if recompiling locally is to be avoided or x for none
+      -mwrepo repo-uri   # middleware repo to be used if recompiling locally is to be avoided or x for none
+      -extrarepo repo-uri # extra repo to be used if you want to pass extra packages or x for none
       -jobs number       # number of parallel jobs to be used for parallel builds
       -extraname name    # string to be added in the name of the image (beware, dots are not allowed)
       -sfrelease x.y.z.p # release version of Sailfish OS against which the image is built
@@ -145,8 +145,11 @@ test -n "$TARGET"       && echo "  TARGET=$TARGET          "
 
 
 [ -f ~/.hadk.env ] && source ~/.hadk.env
-# pre-defined DHD_REPO and MW_REPO prevents local build!
-#source ${TOOLDIR}/hadk.env
+
+EXTRA_HADK_ENV="${TOOLDIR}/$VENDOR/$DEVICE-hadk.env"
+minfo "including default values from $EXTRA_HADK_ENV, if existent"
+[ -f ${EXTRA_HADK_ENV} ] && source ${EXTRA_HADK_ENV}
+unset EXTRA_HADK_ENV
 
 printf "
 export VENDOR=\${VENDOR:-$VENDOR}

@@ -25,7 +25,7 @@ KSFL=$ANDROID_ROOT/tmp/Jolla-@RELEASE@-$DEVICE-@ARCH@.ks
 
 minfo "Adaptation"
 HA_REPO="repo --name=adaptation0-$DEVICE-@RELEASE@"
-if [ ! -z "$MW_REPO" ]; then
+if repo_is_set "$MW_REPO"; then
    sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install cat /usr/share/kickstarts/Jolla-@RELEASE@-$DEVICE-@ARCH@.ks > $KSFL || die
    cat $KSFL
    sed -i -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" $KSFL
@@ -33,18 +33,18 @@ else
    sed -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" \
     $ANDROID_ROOT/installroot/usr/share/kickstarts/$(basename $KSFL) > $KSFL
 fi 
-if [ ! -z "$DHD_REPO" ]; then
+if repo_is_set "$DHD_REPO"; then
   minfo "dhd"
   HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=${DHD_REPO}"
   sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
 fi
 
-if [ ! -z "$MW_REPO" ]; then
+if repo_is_set "$MW_REPO"; then
     minfo "add mw repo"
     HA_REPO2="repo --name=mw-$DEVICE-@RELEASE@ --baseurl=${MW_REPO}"
     sed -i -e "/^$HA_REPO.*$/a$HA_REPO2" $KSFL
 fi
-if [ ! -z "$EXTRA_REPO" ]; then
+if repo_is_set "$EXTRA_REPO"; then
     minfo "add mw repo"
     HA_REPO3="repo --name=extra-$DEVICE-@RELEASE@ --baseurl=${EXTRA_REPO}"
     sed -i -e "/^$HA_REPO.*$/a$HA_REPO3" $KSFL
@@ -54,6 +54,7 @@ fi
 # Not sure about them, yet... maybe include an external per-device file
 #
 #PACKAGES_TO_ADD="sailfish-office jolla-calculator jolla-email jolla-notes jolla-clock jolla-mediaplayer jolla-calendar jolla-fileman mce-plugin-libhybris usb-moded-pc-suite-mode-android usb-moded-mass-storage-android-config usb-moded-diag-mode-android usb-moded-developer-mode-android usb-moded-defaults-android usb-moded-connection-sharing-android-config usb-moded strace jolla-devicelock-plugin-encsfa sailfish-version"
+
 
 #PACKAGES_TO_ADD="$PACKAGES_TO_ADD gstreamer0.10-droidcamsrc gstreamer0.10-colorconv gstreamer0.10-droideglsink libgstreamer0.10-nativebuffer libgstreamer0.10-gralloc gstreamer0.10-omx"
 
@@ -121,13 +122,13 @@ cp -av sfa-${DEVICE}-${RELEASE}${EXTRA_NAME}/sailfishos-${DEVICE}-release-${RELE
 #clean repos in target
 minfo "Info: clean repos in target"
 
-if [ ! -z "$MW_REPO" ] ; then
+if repo_is_set "$MW_REPO"; then
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu rr mw-$DEVICE-hal
 fi
-if [ ! -z "$EXTRA_REPO" ] ; then
+if repo_is_set "$EXTRA_REPO"; then
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu rr extra-$DEVICE
 fi
-if [ ! -z "$DHD_REPO" ] ; then
+if repo_is_set "$DHD_REPO"; then
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu rr dhd-$DEVICE-hal
 fi
 sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu rr local-$DEVICE-hal
