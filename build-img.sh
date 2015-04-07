@@ -50,11 +50,9 @@ if repo_is_set "$EXTRA_REPO"; then
     sed -i -e "/^$HA_REPO.*$/a$HA_REPO3" $KSFL
 fi
 
-#minfo "extra packages"
+minfo "extra packages"
 # Not sure about them, yet... maybe include an external per-device file
-#
-#PACKAGES_TO_ADD="sailfish-office jolla-calculator jolla-email jolla-notes jolla-clock jolla-mediaplayer jolla-calendar jolla-fileman mce-plugin-libhybris usb-moded-pc-suite-mode-android usb-moded-mass-storage-android-config usb-moded-diag-mode-android usb-moded-developer-mode-android usb-moded-defaults-android usb-moded-connection-sharing-android-config usb-moded strace jolla-devicelock-plugin-encsfa sailfish-version"
-
+PACKAGES_TO_ADD="sailfish-office jolla-calculator jolla-email jolla-notes jolla-clock jolla-mediaplayer jolla-calendar jolla-fileman mce-plugin-libhybris strace jolla-devicelock-plugin-encsfa sailfish-version"
 
 #PACKAGES_TO_ADD="$PACKAGES_TO_ADD gstreamer0.10-droidcamsrc gstreamer0.10-colorconv gstreamer0.10-droideglsink libgstreamer0.10-nativebuffer libgstreamer0.10-gralloc gstreamer0.10-omx"
 
@@ -64,9 +62,9 @@ done
 
 #PACKAGES_TO_REMOVE="ofono-configs-mer ssu-vendor-data-example qtscenegraph-adaptation "
 #PACKAGES_TO_REMOVE="ofono-configs-mer ssu-vendor-data-example"
-#for pack in $PACKAGES_TO_REMOVE; do 
-#  sed -i "/@Jolla\ Configuration\ $DEVICE/a -$pack" $KSFL
-#done
+for pack in $PACKAGES_TO_REMOVE; do
+  sed -i "/@Jolla\ Configuration\ $DEVICE/a -$pack" $KSFL
+done
 #  sed -i "s;@Jolla\ Configuration\ $DEVICE;@jolla-hw-adaptation-$DEVICE;g" $KSFL
 cat $KSFL > ~/a.ks
 if [ -n "$DISABLE_TUTORIAL" ]; then
