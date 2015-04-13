@@ -28,7 +28,7 @@ export PATH=${PATH}:${HOME}/bin
 
 if repo_is_unset "$DHD_REPO"; then
   mchapter "5.1"
-  if [ ! - "$ANDROID_ROOT/.repo/manifest.xml" ]; then
+  if [ ! -f "$ANDROID_ROOT/.repo/manifest.xml" ]; then
      mkdir -p "$ANDROID_ROOT"
      cd "$ANDROID_ROOT"
      repo init -u git://github.com/mer-hybris/android.git -b $BRANCH || die
