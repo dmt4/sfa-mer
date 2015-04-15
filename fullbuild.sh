@@ -1,4 +1,6 @@
 #!/bin/bash
+TOOLDIR="$(dirname `which $0`)"
+source "$TOOLDIR/utility-functions.inc"
 
 # The main script.
 # Resets the environment, updates the Mer SDK is necessary and passes on the task to the chroot.
@@ -6,13 +8,13 @@
 
 
 function dabspath {
-    pushd $1 > /dev/null && echo `pwd` && popd > /dev/null
+    pushd "$1" > /dev/null && echo `pwd` && popd > /dev/null
 }
 
 
 function mdabspath {
-    mkdir -p $1
-    dabspath $1
+    mkdir -p "$1"
+    dabspath "$1"
     rmdir --ignore-fail-on-non-empty $1
 }
 
@@ -33,15 +35,15 @@ while (($#)); do
       -vendor vendorName # vendor name
       -device deviceName # device name
       -branch branchName # branch name from mer hybris
-      -dhdrepo repo-uri  # dhd repo to be used if recompiling locally is to be avoided
-      -mwrepo repo-uri   # middleware repo to be used if recompiling locally is to be avoided
-      -extrarepo repo-uri # extra repo to be used if you want to pass extra packages
+      -dhdrepo repo-uri  # dhd repo to be used if recompiling locally is to be avoided or x for none
+      -mwrepo repo-uri   # middleware repo to be used if recompiling locally is to be avoided or x for none
+      -extrarepo repo-uri # extra repo to be used if you want to pass extra packages or x for none
       -jobs number       # number of parallel jobs to be used for parallel builds
       -extraname name    # string to be added in the name of the image (beware, dots are not allowed)
       -sfrelease x.y.z.p # release version of Sailfish OS against which the image is built
       -no-education      # do not show the lenghtly user tutorial on first boot
       -dest folder       # where to place to the image
-      -target name       # target against which to build update8 or update9
+      -target name       # target against which to build (empty for latest)
       -h displays this help\n"
     exit 0
   ;;
@@ -143,28 +145,32 @@ test -n "$TARGET"       && echo "  TARGET=$TARGET          "
 
 
 [ -f ~/.hadk.env ] && source ~/.hadk.env
-source $(dirname $0)/hadk.env
+
+EXTRA_HADK_ENV="${TOOLDIR}/$VENDOR/$DEVICE-hadk.env"
+minfo "including default values from $EXTRA_HADK_ENV, if existent"
+[ -f ${EXTRA_HADK_ENV} ] && source ${EXTRA_HADK_ENV}
+unset EXTRA_HADK_ENV
 
 printf "
-export VENDOR=\${VENDOR:-$VENDOR}
-export DEVICE=\${DEVICE:-$DEVICE}
+export VENDOR=\"\${VENDOR:-$VENDOR}\"
+export DEVICE=\"\${DEVICE:-$DEVICE}\"
 
-export MER_ROOT=\${MER_ROOT:-$MER_ROOT}
-export ANDROID_ROOT=\${ANDROID_ROOT:-$ANDROID_ROOT}
-export IMGDEST=\${IMGDEST:-$IMGDEST}
+export MER_ROOT=\"\${MER_ROOT:-$MER_ROOT}\"
+export ANDROID_ROOT=\"\${ANDROID_ROOT:-$ANDROID_ROOT}\"
+export IMGDEST=\"\${IMGDEST:-$IMGDEST}\"
 
 # always aim for the latest:
-export RELEASE=\${RELEASE:-$RELEASE}
-export EXTRA_STRING=\${EXTRA_STRING:-$EXTRA_STRING}
+export RELEASE=\"\${RELEASE:-$RELEASE}\"
+export EXTRA_STRING=\"\${EXTRA_STRING:-$EXTRA_STRING}\"
 
-export BRANCH=\${BRANCH:-$BRANCH}
-export JOBS=\${JOBS:-$JOBS}
+export BRANCH=\"\${BRANCH:-$BRANCH}\"
+export JOBS=\"\${JOBS:-$JOBS}\"
 
-export DISABLE_TUTORIAL=\${DISABLE_TUTORIAL:-$DISABLE_TUTORIAL}
-export DHD_REPO=\${DHD_REPO:-$DHD_REPO}
-export MW_REPO=\${MW_REPO:-$MW_REPO}
-export EXTRA_REPO=\${EXTRA_REPO:-$EXTRA_REPO}
-export TARGET=\${TARGET:-$TARGET}
+export DISABLE_TUTORIAL=\"\${DISABLE_TUTORIAL:-$DISABLE_TUTORIAL}\"
+export DHD_REPO=\"\${DHD_REPO:-$DHD_REPO}\"
+export MW_REPO=\"\${MW_REPO:-$MW_REPO}\"
+export EXTRA_REPO=\"\${EXTRA_REPO:-$EXTRA_REPO}\"
+export TARGET=\"\${TARGET:-$TARGET}\"
 
 
 # printf \"vars in use:
@@ -191,10 +197,10 @@ export TARGET=\${TARGET:-$TARGET}
 
 # echo $0
 
-echo -e "\e[01;33m Info: 4.1  \e[00m"
-cp $(dirname $0)/profile-mer ~/.mersdk.profile
-cp $(dirname $0)/profile-ubu ~/.mersdkubu.profile
+mchapter "4.1"
+cp ${TOOLDIR}/profile-mer ~/.mersdk.profile
+cp ${TOOLDIR}/profile-ubu ~/.mersdkubu.profile
 
-$(dirname $0)/setup-mer.sh
-$(dirname $0)/exec-mer.sh $(dirname $0)/task-mer.sh
+${TOOLDIR}/setup-mer.sh || die
+${TOOLDIR}/exec-mer.sh ${TOOLDIR}/task-mer.sh
 

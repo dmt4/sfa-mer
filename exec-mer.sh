@@ -1,6 +1,8 @@
 #!/bin/bash
+TOOLDIR="$(dirname `which $0`)"
+source "$TOOLDIR/utility-functions.inc"
 
-# Sshorthand for running things under the Mer SDK or entering it, should no command be passed.
+# Shorthand for running things under the Mer SDK or entering it, should no command be passed.
 
 
 [ -z "$MERSDK" ] || echo 'Already in MerSDK!'
@@ -8,5 +10,6 @@
 
 source ~/.hadk.env
 
-${MER_ROOT}/sdks/sdk/mer-sdk-chroot $*
-
+minfo "Chrooting to mer"
+"$MER_ROOT/sdks/sdk/mer-sdk-chroot" $*
+minfo "left mer chroot"
