@@ -37,6 +37,9 @@ if repo_is_set "$DHD_REPO"; then
   minfo "dhd"
   HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=${DHD_REPO}"
   sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
+  if [ -n "$ENABLE_OBS_AND_STORE" ]; then
+    sed -i "/end 70_sdk-domain/a sed -i -e 's|^adaptation=.*$|adaptation=${DHD_REPO}|' /usr/share/ssu/repos.ini" $KSFL
+  fi
 fi
 
 if repo_is_set "$MW_REPO"; then
@@ -52,7 +55,13 @@ fi
 
 minfo "extra packages"
 # Not sure about them, yet... maybe include an external per-device file
-PACKAGES_TO_ADD="sailfish-office jolla-calculator jolla-email jolla-notes jolla-clock jolla-mediaplayer jolla-calendar jolla-fileman mce-plugin-libhybris strace jolla-devicelock-plugin-encsfa sailfish-version"
+PACKAGES_TO_ADD="sailfish-office jolla-calculator jolla-email jolla-notes jolla-clock jolla-mediaplayer jolla-calendar mce-plugin-libhybris strace jolla-devicelock-plugin-encsfa sailfish-version"
+
+# jolla-fileman is no longer available starting update13. Download "File Manager" from store instead.
+# Add it only to older versions (iirc it never worked anyway as per NEMO#796)
+if [[ $(zypper vcmp $RELEASE 1.1.4.28) == *"is older"* ]]; then
+  PACKAGES_TO_ADD=$PACKAGES_TO_ADD " jolla-fileman"
+fi
 
 #PACKAGES_TO_ADD="$PACKAGES_TO_ADD gstreamer0.10-droidcamsrc gstreamer0.10-colorconv gstreamer0.10-droideglsink libgstreamer0.10-nativebuffer libgstreamer0.10-gralloc gstreamer0.10-omx"
 
@@ -93,7 +102,7 @@ if repo_is_set "$DHD_REPO"; then
   sed -i "/begin 60_ssu/a ssu ar dhd $DHD_REPO" $KSFL
 fi
 sed -i "/begin 60_ssu/a ssu dr adaptation0" $KSFL
-#sed -i "/end 70_sdk-domain/a sed -i -e 's|^adaptation=.*$|adaptation=http://repo.merproject.org/obs/nemo:/devel:/hw:/lge:/hammerhead/sailfish_1.1.0.38_armv7hl/|' /usr/share/ssu/repos.ini" $KSFL
+
 mchapter "8.3"
 minfo "Info: create patterns"
 [ -d hybris ] || mkdir -p hybris
