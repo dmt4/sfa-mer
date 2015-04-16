@@ -55,7 +55,13 @@ fi
 
 minfo "extra packages"
 # Not sure about them, yet... maybe include an external per-device file
-PACKAGES_TO_ADD="sailfish-office jolla-calculator jolla-email jolla-notes jolla-clock jolla-mediaplayer jolla-calendar jolla-fileman mce-plugin-libhybris strace jolla-devicelock-plugin-encsfa sailfish-version"
+PACKAGES_TO_ADD="sailfish-office jolla-calculator jolla-email jolla-notes jolla-clock jolla-mediaplayer jolla-calendar mce-plugin-libhybris strace jolla-devicelock-plugin-encsfa sailfish-version"
+
+# jolla-fileman is no longer available starting update13. Download "File Manager" from store instead.
+# Add it only to older versions (iirc it never worked anyway as per NEMO#796)
+if [[ $(zypper vcmp $RELEASE 1.1.4.28) == *"is older"* ]]; then
+  PACKAGES_TO_ADD=$PACKAGES_TO_ADD " jolla-fileman"
+fi
 
 #PACKAGES_TO_ADD="$PACKAGES_TO_ADD gstreamer0.10-droidcamsrc gstreamer0.10-colorconv gstreamer0.10-droideglsink libgstreamer0.10-nativebuffer libgstreamer0.10-gralloc gstreamer0.10-omx"
 
