@@ -37,6 +37,9 @@ if repo_is_set "$DHD_REPO"; then
   minfo "dhd"
   HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=${DHD_REPO}"
   sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
+  if [ -n "$ENABLE_OBS_AND_STORE" ]; then
+    sed -i "/end 70_sdk-domain/a sed -i -e 's|^adaptation=.*$|adaptation=${DHD_REPO}|' /usr/share/ssu/repos.ini" $KSFL
+  fi
 fi
 
 if repo_is_set "$MW_REPO"; then
@@ -93,7 +96,7 @@ if repo_is_set "$DHD_REPO"; then
   sed -i "/begin 60_ssu/a ssu ar dhd $DHD_REPO" $KSFL
 fi
 sed -i "/begin 60_ssu/a ssu dr adaptation0" $KSFL
-#sed -i "/end 70_sdk-domain/a sed -i -e 's|^adaptation=.*$|adaptation=http://repo.merproject.org/obs/nemo:/devel:/hw:/lge:/hammerhead/sailfish_1.1.0.38_armv7hl/|' /usr/share/ssu/repos.ini" $KSFL
+
 mchapter "8.3"
 minfo "Info: create patterns"
 [ -d hybris ] || mkdir -p hybris
