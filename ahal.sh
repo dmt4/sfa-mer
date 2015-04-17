@@ -156,6 +156,6 @@ if repo_is_unset "$MW_REPO"; then
     ${TOOLDIR}/pkgbuild.sh qt5-feedback-haptics-droid-vibrator || die
     ${TOOLDIR}/pkgbuild.sh qt5-qpa-hwcomposer-plugin || die
     ${TOOLDIR}/pkgbuild.sh "https://github.com/mer-hybris/qtscenegraph-adaptation.git" rpm/qtscenegraph-adaptation-droid.spec || die
+    ${TOOLDIR}/pkgbuild.sh "https://github.com/mer-packages/qtsensors.git" || die
     ${TOOLDIR}/pkgbuild.sh "https://github.com/mer-packages/sensorfw.git" rpm/sensorfw-qt5-hybris.spec || die
-    #${TOOLDIR}/pkgbuild.sh "https://github.com/mer-packages/qtsensors.git" || die
 fi
