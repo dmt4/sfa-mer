@@ -36,9 +36,7 @@ if repo_is_set "$DHD_REPO"; then
   minfo "dhd"
   HA_REPO1="repo --name=adaptation1-$DEVICE-@RELEASE@ --baseurl=${DHD_REPO}"
   sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
-  if [ -n "$ENABLE_OBS_AND_STORE" ]; then
-    sed -i "/end 70_sdk-domain/a sed -i -e 's|^adaptation=.*$|adaptation=${DHD_REPO}|' /usr/share/ssu/repos.ini" $KSFL
-  fi
+  sed -i "/end 70_sdk-domain/a sed -i -e 's|^adaptation=.*$|adaptation=${DHD_REPO}|' /usr/share/ssu/repos.ini" $KSFL
 fi
 
 if repo_is_set "$MW_REPO"; then

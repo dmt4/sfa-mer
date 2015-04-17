@@ -43,7 +43,6 @@ while (($#)); do
       -sfrelease x.y.z.p # release version of Sailfish OS against which the image is built
       -dest folder       # where to place to the image
       -target name       # target against which to build (empty for latest)
-      -obs-and-store     # enable updates from OBS repo and Jolla Store support. The latter also needs to be enabled by Jolla
       -h displays this help\n"
     exit 0
   ;;
@@ -107,10 +106,6 @@ while (($#)); do
     EXTRA_REPO=$1
     shift
   ;;
-  -obs-and-store)
-    shift
-    ENABLE_OBS_AND_STORE=1
-  ;;
   -target)
     shift
     TARGET=$1
@@ -123,11 +118,6 @@ while (($#)); do
   esac
 done
 
-if [[ -n $ENABLE_OBS_AND_STORE && -z $DHD_REPO ]]; then
-  echo "-obs-and-store parameter needs a valid -dhdrepo"
-  exit 0
-fi
-
 echo 'User specified variables:'
 test -n "$VENDOR"           && echo "  VENDOR=$VENDOR            "
 test -n "$DEVICE"           && echo "  DEVICE=$DEVICE            "
@@ -138,11 +128,10 @@ test -n "$RELEASE"          && echo "  RELEASE=$RELEASE          "
 test -n "$EXTRA_STRING"     && echo "  EXTRA_STRING=$EXTRA_STRING"
 test -n "$BRANCH"           && echo "  BRANCH=$BRANCH            "
 test -n "$JOBS"             && echo "  JOBS=$JOBS                "
-test -n "$DHD_REPO"          && echo "  DHD_REPO=$DHD_REPO          "
-test -n "$MW_REPO"       && echo "  MW_REPO=$MW_REPO          "
+test -n "$DHD_REPO"         && echo "  DHD_REPO=$DHD_REPO          "
+test -n "$MW_REPO"          && echo "  MW_REPO=$MW_REPO          "
 test -n "$EXTRA_REPO"       && echo "  EXTRA_REPO=$EXTRA_REPO          "
-test -n "$ENABLE_OBS_AND_STORE" && echo "  ENABLE_OBS_AND_STORE=$ENABLE_OBS_AND_STORE"
-test -n "$TARGET"       && echo "  TARGET=$TARGET          "
+test -n "$TARGET"           && echo "  TARGET=$TARGET          "
 
 
 [ -f ~/.hadk.env ] && source ~/.hadk.env
@@ -172,7 +161,6 @@ export DHD_REPO=\"\${DHD_REPO:-$DHD_REPO}\"
 export MW_REPO=\"\${MW_REPO:-$MW_REPO}\"
 export EXTRA_REPO=\"\${EXTRA_REPO:-$EXTRA_REPO}\"
 export TARGET=\"\${TARGET:-$TARGET}\"
-export ENABLE_OBS_AND_STORE=\"\${ENABLE_OBS_AND_STORE:-$ENABLE_OBS_AND_STORE}\"
 
 
 # printf \"vars in use:
