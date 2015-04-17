@@ -148,19 +148,14 @@ if repo_is_unset "$MW_REPO"; then
     mkdir -p $MER_ROOT/devel/mer-hybris
     cd $MER_ROOT/devel/mer-hybris
 
-
     ${TOOLDIR}/pkgbuild.sh libhybris || die
-    
     sb2 -t $VENDOR-$DEVICE-armv7hl -R -msdk-build zypper -n rm mesa-llvmpipe
-
-    ${TOOLDIR}/pkgbuild.sh qt5-qpa-hwcomposer-plugin || die
-    ${TOOLDIR}/pkgbuild.sh "https://github.com/mer-packages/qtsensors.git" || die
-    ${TOOLDIR}/pkgbuild.sh "https://github.com/mer-packages/sensorfw.git" rpm/sensorfw-qt5-hybris.spec || die
-    ${TOOLDIR}/pkgbuild.sh ngfd-plugin-droid-vibrator || die
-    ${TOOLDIR}/pkgbuild.sh qt5-feedback-haptics-droid-vibrator || die
-    ${TOOLDIR}/pkgbuild.sh pulseaudio-modules-droid || die
-    ${TOOLDIR}/pkgbuild.sh "https://github.com/nemomobile/dsme.git" || die
     ${TOOLDIR}/pkgbuild.sh "https://github.com/nemomobile/mce-plugin-libhybris.git" || die
-
+    ${TOOLDIR}/pkgbuild.sh ngfd-plugin-droid-vibrator || die
+    ${TOOLDIR}/pkgbuild.sh pulseaudio-modules-droid || die
+    ${TOOLDIR}/pkgbuild.sh qt5-feedback-haptics-droid-vibrator || die
+    ${TOOLDIR}/pkgbuild.sh qt5-qpa-hwcomposer-plugin || die
     ${TOOLDIR}/pkgbuild.sh qtscenegraph-adaptation || die
+    ${TOOLDIR}/pkgbuild.sh "https://github.com/mer-packages/sensorfw.git" rpm/sensorfw-qt5-hybris.spec || die
+    #${TOOLDIR}/pkgbuild.sh "https://github.com/mer-packages/qtsensors.git" || die
 fi
