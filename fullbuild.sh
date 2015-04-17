@@ -41,7 +41,6 @@ while (($#)); do
       -jobs number       # number of parallel jobs to be used for parallel builds
       -extraname name    # string to be added in the name of the image (beware, dots are not allowed)
       -sfrelease x.y.z.p # release version of Sailfish OS against which the image is built
-      -no-education      # do not show the lenghtly user tutorial on first boot
       -dest folder       # where to place to the image
       -target name       # target against which to build (empty for latest)
       -obs-and-store     # enable updates from OBS repo and Jolla Store support. The latter also needs to be enabled by Jolla
@@ -108,10 +107,6 @@ while (($#)); do
     EXTRA_REPO=$1
     shift
   ;;
-  -no-education)
-    shift
-    DISABLE_TUTORIAL=1
-  ;;
   -obs-and-store)
     shift
     ENABLE_OBS_AND_STORE=1
@@ -146,7 +141,6 @@ test -n "$JOBS"             && echo "  JOBS=$JOBS                "
 test -n "$DHD_REPO"          && echo "  DHD_REPO=$DHD_REPO          "
 test -n "$MW_REPO"       && echo "  MW_REPO=$MW_REPO          "
 test -n "$EXTRA_REPO"       && echo "  EXTRA_REPO=$EXTRA_REPO          "
-test -n "$DISABLE_TUTORIAL" && echo "  DISABLE_TUTORIAL=$DISABLE_TUTORIAL "
 test -n "$ENABLE_OBS_AND_STORE" && echo "  ENABLE_OBS_AND_STORE=$ENABLE_OBS_AND_STORE"
 test -n "$TARGET"       && echo "  TARGET=$TARGET          "
 
@@ -174,7 +168,6 @@ export EXTRA_STRING=\"\${EXTRA_STRING:-$EXTRA_STRING}\"
 export BRANCH=\"\${BRANCH:-$BRANCH}\"
 export JOBS=\"\${JOBS:-$JOBS}\"
 
-export DISABLE_TUTORIAL=\"\${DISABLE_TUTORIAL:-$DISABLE_TUTORIAL}\"
 export DHD_REPO=\"\${DHD_REPO:-$DHD_REPO}\"
 export MW_REPO=\"\${MW_REPO:-$MW_REPO}\"
 export EXTRA_REPO=\"\${EXTRA_REPO:-$EXTRA_REPO}\"
@@ -196,7 +189,6 @@ export ENABLE_OBS_AND_STORE=\"\${ENABLE_OBS_AND_STORE:-$ENABLE_OBS_AND_STORE}\"
 #     BRANCH=\$BRANCH
 #     JOBS=\$JOBS
 #
-#     DISABLE_TUTORIAL=\$DISABLE_TUTORIAL
 #     DHD_REPO=\$DHD_REPO
 #     MW_REPO=\$MW_REPO
 #     EXTRA_REPO=\$EXTRA_REPO

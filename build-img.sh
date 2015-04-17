@@ -27,7 +27,6 @@ minfo "Adaptation"
 HA_REPO="repo --name=adaptation0-$DEVICE-@RELEASE@"
 if repo_is_set "$MW_REPO"; then
    sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install cat /usr/share/kickstarts/Jolla-@RELEASE@-$DEVICE-@ARCH@.ks > $KSFL || die
-   cat $KSFL
    sed -i -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" $KSFL
 else 
    sed -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" \
@@ -75,18 +74,6 @@ for pack in $PACKAGES_TO_REMOVE; do
   sed -i "/@Jolla\ Configuration\ $DEVICE/a -$pack" $KSFL
 done
 #  sed -i "s;@Jolla\ Configuration\ $DEVICE;@jolla-hw-adaptation-$DEVICE;g" $KSFL
-cat $KSFL > ~/a.ks
-if [ -n "$DISABLE_TUTORIAL" ]; then
-#Beware the order of these commands is reversed in $KSFL
-  minfo "disable tutorials"
-  sed -i '/%post$/a chown nemo:privileged /home/nemo/.jolla-startupwizard-usersession-done' $KSFL
-  sed -i '/%post$/a chown nemo:nemo /home/nemo/.jolla-startupwizard-done'          $KSFL
-  sed -i '/%post$/a touch /home/nemo/.jolla-startupwizard-done false'              $KSFL
-  sed -i '/%post$/a touch /home/nemo/.jolla-startupwizard-usersession-done false'  $KSFL
-
-  sed -i '/%post$/a dconf write "/apps/jolla-startupwizard/reached_tutorial" true' $KSFL
-  sed -i '/%post$/a dconf write "/desktop/lipstick-jolla-home/first_run" false'    $KSFL
-fi
 mchapter "Add adaptation and extra repos in image"
 
 sed -i '/%post --nochroot/a cp $INSTALL_ROOT'//etc//sailfish-release' $IMG_OUT_DIR' $KSFL
@@ -115,7 +102,6 @@ minfo "create mic"
 #RELEASE=latest
 # WARNING: EXTRA_NAME currently does not support '.' dots in it!
 EXTRA_NAME=-${EXTRA_STRING}-$(date +%Y%m%d%H%M)
-cat $KSFL > ~/a
 sudo mic create fs --arch armv7hl \
   --tokenmap=ARCH:armv7hl,RELEASE:$RELEASE,EXTRA_NAME:$EXTRA_NAME \
   --record-pkgs=name,url \
