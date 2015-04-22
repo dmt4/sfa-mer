@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <project name="mer-hybris/android_device_lge_hammerhead" path="device/lge/hammerhead" revision="hybris-11.0-44S" />
+  <!-- leaving as it is on hybris-11.0, will deal with (huge) rebasing later -->
+  <project name="mer-hybris/android_kernel_lge_hammerhead" path="kernel/lge/hammerhead" revision="hybris-11.0" />
+
+</manifest>
+

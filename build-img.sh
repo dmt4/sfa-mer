@@ -30,7 +30,7 @@ if repo_is_set "$MW_REPO"; then
    sed -i -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" $KSFL
 else 
    sed -e "s|^$HA_REPO.*$|$HA_REPO --baseurl=file://$ANDROID_ROOT/droid-local-repo/$DEVICE|" \
-    $ANDROID_ROOT/installroot/usr/share/kickstarts/$(basename $KSFL) > $KSFL
+    $ANDROID_ROOT/hybris/droid-configs/installroot/usr/share/kickstarts/$(basename $KSFL) > $KSFL
 fi 
 if repo_is_set "$DHD_REPO"; then
   minfo "dhd"
@@ -38,7 +38,6 @@ if repo_is_set "$DHD_REPO"; then
   sed -i -e "/^$HA_REPO.*$/a$HA_REPO1" $KSFL
   sed -i "/end 70_sdk-domain/a sed -i -e 's|^adaptation=.*$|adaptation=${DHD_REPO}|' /usr/share/ssu/repos.ini" $KSFL
 fi
-
 if repo_is_set "$MW_REPO"; then
     minfo "add mw repo"
     HA_REPO2="repo --name=mw-$DEVICE-@RELEASE@ --baseurl=${MW_REPO}"
@@ -71,7 +70,7 @@ done
 for pack in $PACKAGES_TO_REMOVE; do
   sed -i "/@Jolla\ Configuration\ $DEVICE/a -$pack" $KSFL
 done
-#  sed -i "s;@Jolla\ Configuration\ $DEVICE;@jolla-hw-adaptation-$DEVICE;g" $KSFL
+  #sed -i "s;@Jolla\ Configuration\ $DEVICE;@jolla-configuration-hammerhead;g" $KSFL
 mchapter "Add adaptation and extra repos in image"
 
 sed -i '/%post --nochroot/a cp $INSTALL_ROOT'//etc//sailfish-release' $IMG_OUT_DIR' $KSFL
@@ -91,8 +90,9 @@ sed -i "/begin 60_ssu/a ssu dr adaptation0" $KSFL
 mchapter "8.3"
 minfo "Info: create patterns"
 [ -d hybris ] || mkdir -p hybris
-rpm/helpers/process_patterns.sh || die
+./hybris/droid-configs/droid-configs-device/helpers/process_patterns.sh || die
 
+cat $KSFL > ~/a.ks
 mchapter "8.4"
 minfo "create mic"
 # always aim for the latest:
