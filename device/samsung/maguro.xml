@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <project path="device/samsung/maguro" name="mer-hybris/android_device_samsung_maguro" revision="hybris-10.1" />
+  <project path="kernel/samsung/tuna" name="mer-hybris/android_kernel_samsung_tuna" revision="hybris-10.1" />
+</manifest>
+
