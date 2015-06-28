@@ -34,8 +34,8 @@ popd
 
 cd ${TOOLDIR}
 # replace the shoddy ubu-chroot script
-sudo cp $TOOLDIR/ubu-chroot-fixed-cmd-mode `which ubu-chroot` || die
-sudo chmod +x `which ubu-chroot` || die
+sudo install -d /usr/local/bin || die
+sudo install -m 755 $TOOLDIR/ubu-chroot-fixed-cmd-mode /usr/local/bin/ubu-chroot || die
 
 minfo "diving into ubuntu chroot"
 ubu-chroot -r "$MER_ROOT/sdks/ubuntu" `pwd`/task-ubu.sh || die
