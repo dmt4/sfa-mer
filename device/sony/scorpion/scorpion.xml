@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+<project path="device/sony/common" name="CyanogenMod/android_device_sony_common" revision="cm-11.0" />
+<project path="hardware/sony/DASH" name="CyanogenMod/android_hardware_sony_DASH" revision="cm-11.0" />
+<project path="device/sony/fusion3-common" name="CyanogenMod/android_device_sony_fusion3-common" revision="cm-11.0"/>
+<project path="device/sony/qcom-common" name="CyanogenMod/android_device_sony_qcom-common" revision="cm-11.0" />
+<project path="device/sony/scorpion" name="CyanogenMod/android_device_sony_yuga" revision="cm-11.0" />
+<project path="kernel/sony/apq8064" name="oleid/android_kernel_sony_apq8064" revision="cm-11.0" />
+<project path="vendor/sony" name="TheMuppets/proprietary_vendor_sony" revision="cm-11.0" />
+<project path="device/sony/msm8974-common" name="CyanogenMod/android_device_sony_msm8960-common" revision="cm-11.0" />
+
+<!-- use patched version of libhwcomposer to prevent hanging of test_hwcomp -->
+<remove-project path="hardware/qcom/display-caf" name="CyanogenMod/android_hardware_qcom_display-caf" groups="caf" />
+<project path="hardware/qcom/display-caf" name="oleid/android_hardware_qcom_display-caf" revision="cm-11.0" />
+
+<!-- repo with build-fix for scorpion -->
+<remove-project path="system/vold" name="CyanogenMod/android_system_vold" groups="pdk" />
+<project path="system/vold" name="oleid/android_system_vold" revision="cm-11.0" />
+
+<!-- repo with my config -->
+<remove-project path="rpm" name="mer-hybris/droid-hal-device" remote="github" revision="hybris-10.1"/>
+<project path="rpm" name="oleid/droid-hal-device" remote="github" revision="hybris-10.1"/>
+</manifest>
