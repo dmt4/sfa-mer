@@ -18,6 +18,6 @@
 <project path="system/vold" name="oleid/android_system_vold" revision="cm-12.0" />
 
 <!-- repo with my config -->
-<remove-project path="rpm" name="mer-hybris/droid-hal-device" remote="github" revision="hybris-11.0"/>
-<project path="rpm" name="oleid/droid-hal-device" remote="github" revision="hybris-11.0"/>
+<remove-project path="rpm" name="mer-hybris/droid-hal-device" remote="github" revision="hybris-10.1"/>
+<project path="rpm" name="oleid/droid-hal-device" remote="github" revision="hybris-10.1"/>
 </manifest>
