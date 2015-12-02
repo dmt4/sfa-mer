@@ -11,32 +11,30 @@ The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 po
 
   - Make sure the .sh files are executable and start the 'fullbuild.sh' script. After a shortwhile it will ask for the root password to enter the Mer chroot.
 
-  - If all goes suffessfull, after an hour or so, a freshly baked image shall appear in the current working directory.
+  - If all goes successfull, after an hour or so, a freshly baked image should be found in the current working directory.
 
-  - The scrips below fullbuild.sh, responsible for the different activities, can be executed in standalone mode after initial fullbuild.sh, to repeat certain parts of the build. Of these, ahal.sh, build-img.sh and the combined hal-mw-and-img.sh are probably most useful. Each script contains a short description in its heading.
+  - The scripts below fullbuild.sh, responsible for the different activities, can be executed in standalone mode after initial fullbuild.sh, to repeat certain parts of the build. Of these, ahal.sh, build-img.sh and the combined hal-mw-and-img.sh are probably most useful. Each script contains a short description in its heading.
 
 
 ## Notes
 
-  - If you have ~/.scratchbox2 it will be autobacked up to ~/.scratchbox2-$(date +%d-%m-%Y.%H-%M-%S) .
+  - If you have ~/.scratchbox2 it will be autobacked up to ~/.scratchbox2-$(date +%d-%m-%Y.%H-%M-%S).
 
-  - After successfull build the different scripts can be used manually intependently to update certain parts of the build. However they are not ducumented yet.
+  - After a successfull build the different scripts can be used manually independently to update certain parts of the build. However they are not documented yet.
 
   - Repeated execution of the script is intended to only update the sources and rebuild the differences, the middleware and the image.
 
   - Before running the script ensure git is installed on the host, and your details are setup
     ```bash
-    git config --global user.email "you@example.com"
-    git config --global user.name "Your Name"
+    git config --global user.email "Add your e-mailadress here instead"
+    git config --global user.name "Add your full name here instead"
     ```
 
   - If building hybris-hal in parallel mode fails, try "-jobs 1" (see example below).
 
-
 ## **WARNING**
 
   **CLOSE THE UNHINDERED ROOT ACCESS AT PORT 2323 BEFORE CONNECTING TO THE NET**
-
 
 ## Usage example
 ```bash
@@ -49,7 +47,6 @@ last alpha5 for hammerhead
 -extrarepo x -target
 update10
 ```
-
 
 ## License
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
