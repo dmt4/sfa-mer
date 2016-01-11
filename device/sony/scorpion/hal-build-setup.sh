@@ -1,9 +1,17 @@
 TOOLDIR="$(dirname $0)/../.."
+
 source "$TOOLDIR/utility-functions.inc"
 
 source ~/.hadk.env
 
-if [ ! -f device/sony/yuga/fstab.qcom ]; then
-   minfo "copy default fstab to device/sony/scorpion/fstab.qcom"
-   cp device/sony/fusion3-common/rootdir/fstab.qcom device/sony/scorpion/fstab.qcom
-fi
+pushd ./device/sony/scorpion
+    rm -f cm.dependencies
+    git checkout cm.dependencies
+popd
+sed -i -n '/kernel/{N;s/.*//;x;d;};x;p;${x;p;}' ./device/sony/scorpion/cm.dependencies
+sed -i "/},$/d" ./device/sony/scorpion/cm.dependencies
+sed -i "/^$/d"  ./device/sony/scorpion/cm.dependencies
+
+
+cp /home/alin/hackmanifest.xml .repo/local_manifests/manifest.xml
+sed -i "/_sony_scorpion/d" .repo/manifests/default.xml
