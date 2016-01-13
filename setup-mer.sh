@@ -18,4 +18,8 @@ minfo "untar mer"
 touch ${TARBALL}.untarred
 minfo "done mer"
 
-
+# These commands are a tmp workaround of glitch when working with target:
+zypper ar http://repo.merproject.org/obs/home:/sledge:/mer/latest_i486/ \
+curlfix
+zypper ref curlfix
+zypper dup --from curlfix
