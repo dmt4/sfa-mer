@@ -39,14 +39,10 @@ The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 po
 ## Usage example
 ```bash
 last alpha5 for hammerhead
-./fullbuild.sh -mer-root /home/alin/lavello/NEXUS5/mer-jan-t2 -android-root
-/home/alin/lavello/NEXUS5/ubu-jan-t2 -branch hybris-11.0 -device hammerhead -vendor lge -dest
-/home/alin/lavello/nexus5 -sfrelease 1.1.1.27  -extraname alpha5 -jobs 4 -dhdrepo
-"http://repo.merproject.org/obs/nemo:/devel:/hw:/lge:/hammerhead/sailfish_latest_armv7hl/" -mwrepo
-"http://repo.merproject.org/obs/nemo:/devel:/hw:/lge:/hammerhead/sailfish_latest_armv7hl/"
--extrarepo x -target
-update10
+./fullbuild.sh -mer-root /home/alin/lavello/NEXUS5/mer-jan-t2 -android-root /home/alin/lavello/NEXUS5/ubu-jan-t2 -branch hybris-11.0 -device hammerhead -vendor lge -dest /home/alin/lavello/nexus5 -sfrelease 1.1.1.27  -extraname alpha5 -jobs 4 -dhdrepo "http://repo.merproject.org/obs/nemo:/devel:/hw:/lge:/hammerhead/sailfish_latest_armv7hl/" -mwrepo "http://repo.merproject.org/obs/nemo:/devel:/hw:/lge:/hammerhead/sailfish_latest_armv7hl/" -extrarepo x -target update10
 ```
+
+Change the whole above command line for your user directory and the model and maker that you're building for. 
 
 ## License
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
