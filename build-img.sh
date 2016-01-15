@@ -49,7 +49,7 @@ if repo_is_set "$EXTRA_REPO"; then
     sed -i -e "/^$HA_REPO.*$/a$HA_REPO3" $KSFL
 fi
 
-minfo "extra packages"
+minfo "Adding extra packages"
 # Not sure about them, yet... maybe include an external per-device file
 PACKAGES_TO_ADD="sailfish-office jolla-calculator jolla-email jolla-notes jolla-clock jolla-mediaplayer jolla-calendar mce-plugin-libhybris strace jolla-devicelock-plugin-encsfa sailfish-version"
 
@@ -88,13 +88,13 @@ fi
 sed -i "/begin 60_ssu/a ssu dr adaptation0" $KSFL
 
 mchapter "8.3"
-minfo "Info: create patterns"
+minfo "Info: Creating patterns"
 [ -d hybris ] || mkdir -p hybris
 ./hybris/droid-configs/droid-configs-device/helpers/process_patterns.sh || die
 
 cat $KSFL > ~/a.ks
 mchapter "8.4"
-minfo "create mic"
+minfo "Creating MIC"
 # always aim for the latest:
 #RELEASE=1.0.8.19
 #RELEASE=latest
@@ -106,12 +106,12 @@ sudo mic create fs --arch armv7hl \
   --outdir=sfa-$DEVICE-$RELEASE$EXTRA_NAME \
   --pack-to=sfa-$DEVICE-$RELEASE$EXTRA_NAME.tar.bz2 \
   $KSFL 2>&1 | tee mic.log  || die
-minfo "Info: copy image"
+minfo "Info: Copying the image"
 mkdir -p "$IMGDEST" || die
 cp -av sfa-${DEVICE}-${RELEASE}${EXTRA_NAME}/sailfishos-${DEVICE}-release-${RELEASE}${EXTRA_NAME}.zip "$IMGDEST"/ || die
 
 #clean repos in target
-minfo "Info: clean repos in target"
+minfo "Info: Cleaning repos in the target"
 
 if repo_is_set "$MW_REPO"; then
   sb2 -t $VENDOR-$DEVICE-armv7hl -R -m sdk-install ssu rr mw-$DEVICE-hal
