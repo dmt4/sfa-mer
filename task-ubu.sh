@@ -15,7 +15,7 @@ source ~/.hadk.env
 [ -z "$MERSDKUBU" ] && exit 0
 
 # install software in chroot
-minfo "install additional tools for ubuntu chroot"
+minfo "Installing additional tools for the Ubuntu chroot"
 sudo apt-get install -y unzip bsdmainutils
 
 mkdir -p ~/bin
@@ -24,7 +24,6 @@ chmod a+x ~/bin/repo
 
 # this is actually needed and not just a tiny convenience because other scripts later use it internally
 export PATH=${PATH}:${HOME}/bin
-
 
 if repo_is_unset "$DHD_REPO"; then
   mchapter "5.1"
@@ -42,7 +41,7 @@ if repo_is_unset "$DHD_REPO"; then
      mkdir -p .repo/local_manifests
      cp ${DEVICE_CONFIG} .repo/local_manifests/
   else
-     mwarn "No manifest for device $DEVICE found, build might not work"
+     mwarn "No manifest for device $DEVICE was found, building might not work"
      minfo "In order to allow this script to inject a manifest, deposit"
      minfo "it as $DEVICE_CONFIG"
   fi
@@ -50,10 +49,10 @@ if repo_is_unset "$DHD_REPO"; then
 
   minfo "repo sync -j $JOBS -c &> repo-sync.stdoe"
   repo sync  -j $JOBS -c &> repo-sync.stdoe || die_with_log repo-sync.stdoe
-  minfo "done repo sync -c &> repo-sync.stdoe"
+  minfo "Done with repo sync -c &> repo-sync.stdoe"
 
   mchapter "5.2"
-  minfo "build env, cache and breackfast "
+  minfo "Build environment, cache and breakfast"
   if [ -f .repo/local_manifests/roomservice.xml ]; then
      minfo "Remove room service"
      rm -f .repo/local_manifests/roomservice.xml
@@ -61,7 +60,7 @@ if repo_is_unset "$DHD_REPO"; then
 
 DEVICE_SETUP_SCRIPT="$TOOLDIR/device/$VENDOR/$DEVICE-hal-build-setup.sh"
 if [ -f $DEVICE_SETUP_SCRIPT ]; then
-  minfo "Calling hal build setup script $DEVICE_SETUP_SCRIPT"
+  minfo "Calling the hal build setup script $DEVICE_SETUP_SCRIPT..."
   bash ${DEVICE_SETUP_SCRIPT}
 else
   mwarn "No hal build setup script for your $DEVICE found, build might not work"
