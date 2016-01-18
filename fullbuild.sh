@@ -5,12 +5,9 @@ source "$TOOLDIR/utility-functions.inc"
 # The main script.
 # Resets the environment, updates the Mer SDK is necessary and passes on the task to the chroot.
 
-
-
 function dabspath {
     pushd "$1" > /dev/null && echo `pwd` && popd > /dev/null
 }
-
 
 function mdabspath {
     mkdir -p "$1"
@@ -20,8 +17,8 @@ function mdabspath {
 
 # Check if git is installed
 if ! which git >/dev/null; then
-        echo "WARRNING"
-        echo "you need git to run this script"
+        echo "WARNING"
+        echo "You need git to run this script"
         return
 fi
 
@@ -133,12 +130,11 @@ test -n "$MW_REPO"          && echo "  MW_REPO=$MW_REPO          "
 test -n "$EXTRA_REPO"       && echo "  EXTRA_REPO=$EXTRA_REPO          "
 test -n "$TARGET"           && echo "  TARGET=$TARGET          "
 
-
 [ -f ~/.hadk.env ] && source ~/.hadk.env
 
 # got to think a little more on the organisation and workflow of a multidevice setup
 EXTRA_HADK_ENV="${TOOLDIR}/device/$VENDOR/$DEVICE-hadk.env"
-[ -f ${EXTRA_HADK_ENV} ] && minfo "including default values from $EXTRA_HADK_ENV" || mwarn "default values file $EXTRA_HADK_ENV does not exist"
+[ -f ${EXTRA_HADK_ENV} ] && minfo "Including default values from $EXTRA_HADK_ENV" || mwarn "default values file $EXTRA_HADK_ENV does not exist"
 [ -f ${EXTRA_HADK_ENV} ] && source ${EXTRA_HADK_ENV}
 unset EXTRA_HADK_ENV
 
@@ -162,7 +158,6 @@ export MW_REPO=\"\${MW_REPO:-$MW_REPO}\"
 export EXTRA_REPO=\"\${EXTRA_REPO:-$EXTRA_REPO}\"
 export TARGET=\"\${TARGET:-$TARGET}\"
 
-
 # printf \"vars in use:
 #     VENDOR=\$VENDOR
 #     DEVICE=\$DEVICE
@@ -183,7 +178,6 @@ export TARGET=\"\${TARGET:-$TARGET}\"
 # \"
 " > ~/.hadk.env
 
-
 # echo $0
 
 mchapter "4.1"
@@ -192,4 +186,3 @@ cp ${TOOLDIR}/profile-ubu ~/.mersdkubu.profile
 
 ${TOOLDIR}/setup-mer.sh || die
 ${TOOLDIR}/exec-mer.sh ${TOOLDIR}/task-mer.sh
-
