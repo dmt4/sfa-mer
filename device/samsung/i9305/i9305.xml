@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <project path="device/samsung/i9305" name="mer-hybris/android_device_samsung_i9305" revision="hybris-12.1" />
+  <project path="kernel/samsung/smdk4412" name="mer-hybris/android_kernel_samsung_smdk4412" revision="hybris-12.1" />
+</manifest>
