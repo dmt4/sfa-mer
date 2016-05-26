@@ -11,7 +11,7 @@ The set of scripts aims to help preparing Sailfish/Mer images for the Nexus 5 po
 
   - Make sure the .sh files are executable and start the 'fullbuild.sh' script. After a shortwhile it will ask for the root password to enter the Mer chroot.
 
-  - If all goes suffessfull, after an hour or so, a freshly baked image shall appear in the current working directory.
+  - If all goes successfull, after an hour or so, a freshly baked image shall appear in the current working directory.
 
   - The scrips below fullbuild.sh, responsible for the different activities, can be executed in standalone mode after initial fullbuild.sh, to repeat certain parts of the build. Of these, ahal.sh, build-img.sh and the combined hal-mw-and-img.sh are probably most useful. Each script contains a short description in its heading.
 
