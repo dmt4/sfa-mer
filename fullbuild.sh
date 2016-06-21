@@ -133,7 +133,7 @@ test -n "$TARGET"           && echo "  TARGET=$TARGET          "
 [ -f ~/.hadk.env ] && source ~/.hadk.env
 
 # got to think a little more on the organisation and workflow of a multidevice setup
-EXTRA_HADK_ENV="${TOOLDIR}/device/$VENDOR/$DEVICE-hadk.env"
+EXTRA_HADK_ENV="${TOOLDIR}/device/$VENDOR/$DEVICE/$DEVICE-hadk.env"
 [ -f ${EXTRA_HADK_ENV} ] && minfo "Including default values from $EXTRA_HADK_ENV" || mwarn "default values file $EXTRA_HADK_ENV does not exist"
 [ -f ${EXTRA_HADK_ENV} ] && source ${EXTRA_HADK_ENV}
 unset EXTRA_HADK_ENV
